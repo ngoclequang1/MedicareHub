@@ -1,0 +1,380 @@
+/* Content */
+.main-content {
+    flex-grow: 1;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px;
+}
+.content {
+    flex: 1;
+    padding: 20px;
+    background: white;
+    height: 542px;
+    border-radius: 10px;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.content h2{
+    font-size: 30px;
+    text-transform: uppercase;
+}
+.title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.info-header,
+.doctor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Info Box Styling */
+.info-box,
+.doctor-list{
+    background: white;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+
+}
+.info-box,
+.doctor-list {
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+    max-height: 76px; /* Ẩn mặc định */
+}
+
+.info-box.open,
+.doctor-list.open {
+    max-height: 500px; /* Điều chỉnh tùy vào nội dung */
+}
+
+.info-box h3,
+.doctor-list h3 {
+    cursor: pointer;
+}
+/* Header */
+.info-box h3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.edit {
+    font-size: 16px;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+    flex-basis: 120px;
+    border: none;
+}
+
+/* Table Styling */
+.info-table,
+.doctor-table {
+    width: 98%;
+    border-spacing: 0;
+    margin: 20px auto;
+}
+.info-box h3{
+    font-size: 20px;
+    width: 100%;
+}
+
+.info-table td {
+    border: 1px solid #000;
+    padding: 10px;
+    font-size: 18px;
+}
+
+.info-table td:first-child {
+    font-weight: bold;
+    width: 30%;
+    background: #fff;
+}
+
+.info-table td:last-child {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+
+.add-btn {
+    background: #007BFF;
+    color: white;
+    padding: 3px 5px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 17px;
+}
+.error-message {
+    font-size: 10px; /* Kích thước chữ nhỏ */
+    color: #ff0000; /* Màu chữ đỏ */
+    margin-bottom: 5px;
+    /* Khoảng cách dưới để không dính vào input tiếp theo */
+    display: block; /* Đảm bảo hiển thị dưới dạng block để xuống dòng */
+    text-align: left;
+}
+/* Container form hiển thị các phần tử theo hàng ngang */
+#status-form {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Tạo khoảng cách đều giữa các phần tử */
+    width: 100%;
+}
+
+.status-dropdown {
+    flex: 1; /* Dropdown sẽ chiếm phần không gian còn lại */
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    /* Loại bỏ width: auto; để dropdown tự động điều chỉnh */
+}
+
+.update-btn {
+    padding: 10px 20px; /* Tăng padding ngang để button rộng hơn */
+    font-size: 14px;
+    font-weight: bold;
+    background: green;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    /* Loại bỏ flex-basis để button có kích thước theo nội dung */
+}
+
+/* Doctor List */
+.doctor-list h3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.doctor-table thead {
+    background: #f1f1f1;
+}
+.doctor-table tr {
+    max-height: 43.2px;
+}
+.doctor-table th, .doctor-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+
+.doctor-table td i {
+    cursor: pointer;
+    text-align: center;
+}
+.full-name{
+    text-align: left;
+    width: 300px;
+    padding-left: 50px;
+}
+.phone-number {
+    width: 250px;
+}
+.identity-number {
+    width: 150px;
+}
+.status {
+    font-weight: bold;
+    width: 180px;
+}
+
+.status-dot {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.status-dot.active {
+    color: #00C58D;
+}
+
+.status-dot.inactive {
+    color: #bc3434;
+}
+
+
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    width: 420px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+.form-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Input Fields */
+input, select {
+    height: 40px;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+.textarea {
+    display: flex;
+    flex-direction: column;
+}
+
+.textarea label {
+    margin-bottom: 5px;
+}
+
+.textarea textarea {
+    height: 100px;
+    resize: none;
+}
+.button-container {
+    text-align: right;
+    margin-top: 20px;
+}
+#updateButton {
+    color: #1FC65C;
+    border: none;
+    padding: 5px;
+    font-weight: bold;
+    background-color: transparent;
+}
+
+
+/* Full Width Inputs */
+.full-width {
+    width: calc(100% - 2px);
+    margin-bottom: 12px;
+}
+
+/* Row Layout */
+.row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.ideal-width {
+    width: 100%;
+    max-width: 398px;
+    margin-bottom: 12px;
+}
+
+.half-width {
+    width: calc(50% - 6px);
+}
+
+/* Date Input */
+.date-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.date-container input {
+    width: 100%;
+    padding-right: 30px;
+}
+
+/* Gender Selection */
+.gender-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.gender-options {
+    display: flex;
+    gap: 10px;
+}
+
+.gender-options label {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.gender-options input[type="radio"] {
+    margin: 0;
+    transform: scale(1.1);
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.cancel {
+    background-color: red;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.submit {
+    background-color: blue;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.cancel:hover {
+    background-color: darkred;
+}
+
+.submit:hover {
+    background-color: darkblue;
+}

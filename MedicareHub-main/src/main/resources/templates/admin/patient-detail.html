@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_admin">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Hub - Doctor</title>
+    <link rel="stylesheet" th:href="@{/css/doctor.css}"/>
+    <script th:src="@{/js/update.js}"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <main class="content">
+        <h2>HỒ SƠ BÁC SĨ</h2>
+        <div class="container">
+            <form th:action="@{/admin/patients/update}" method="post" class="info-container" enctype="multipart/form-data" id="addForm">
+                <input type="hidden" th:field="*{patient.patientID}" />
+                <div class="avatar">
+                    <img id="patientImage" th:src="@{${patient.user.image}}" style="cursor: pointer;">
+                    <!-- Hidden file input -->
+                    <input type="file" id="imageUpload" name="imageFile" style="display: none;" />
+                </div>
+                <div class="info">
+                    <ul>
+                        <li>
+                            <i class="fa-solid fa-user"></i>
+                            Họ và tên: <input type="text" th:field="*{patient.user.fullName}" class="input-field">
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-calendar-days"></i>
+                            Ngày sinh: <input type="date" name="dob" th:value="${#dates.format(patient.dob, 'yyyy-MM-dd')}" class="input-field">
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-venus-mars"></i>
+                            Giới tính: <span th:text="${patient.user.gender}"></span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-id-card"></i>
+                            CCCD: <span th:text="${patient.user.identityNumber}"></span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-globe"></i>
+                            Dân tộc: <span th:text="${patient.ethnicity}"></span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-hashtag"></i>
+                            Mã bệnh nhân: <span th:text="${patient.patientID}"></span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-location-dot"></i>
+                            Địa chỉ: <span th:text="${patient.address}"></span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-phone"></i>
+                            Số điện thoại: <input type="text" th:field="*{patient.user.phoneNumber}" class="input-field">
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-envelope"></i>
+                            Email: <input type="email" th:field="*{patient.user.email}" class="input-field">
+                        </li>
+                    </ul>
+                    <!-- Dropdown to set the enable status -->
+                    <div class="form-group">
+                        <label for="enabled">Trạng thái:</label>
+                        <select th:field="*{patient.user.enabled}" class="input-field" id="enabled">
+                            <option value="true">Còn hoạt động</option>
+                            <option value="false">Không hoạt động</option>
+                        </select>
+                    </div>
+                    <div class="btn">
+                        <button type="button" class="btn-cancel" onclick="window.location.href='/admin/patients';">Hủy</button>
+                        <button type="submit" class="btn-save">Lưu</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

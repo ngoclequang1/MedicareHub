@@ -1,0 +1,175 @@
+
+/* Breadcrumb & Wrapper */
+.confirmation-wrapper {
+    width: 100%;
+    background-color: #fff;
+    padding: 40px 0;
+}
+
+.breadcrumb {
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto 30px auto;   /* Thẳng hàng với nav */
+    font-size: 18px;
+    color: #000;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+
+.breadcrumb a {
+    color: #014dd5;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+/* Patient Content */
+.patient-content {
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto;
+}
+
+/* Table */
+.table-wrapper {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+.confirm-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.confirm-table th,
+.confirm-table td {
+    padding: 15px;
+    font-size: 16px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.confirm-table .table-title {
+    background-color: #014dd5;
+    color: #fff;
+    font-size: 18px;
+    text-align: left;
+    padding: 18px;
+}
+.confirm-table .icon-col {
+    text-align: center;   /* ✅ Căn icon giữa cột */
+    width: 60px;          /* ✅ Giữ cột icon cố định */
+}
+.confirm-table .icon-col i {
+    color: #014dd5;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.confirm-table i {
+    color: #014dd5;
+}
+
+.remove-btn {
+    cursor: pointer;
+    color: #333;
+    transition: color 0.3s;
+}
+
+.remove-btn:hover {
+    color: #e53935;
+}
+
+/* Action Buttons */
+.confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background 0.3s;
+}
+
+.btn-primary {
+    background-color: #014dd5;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #00379d;
+}
+
+.btn-secondary {
+    background-color: #f0f0f0;
+}
+
+.btn-secondary:hover {
+    background-color: #e0e0e0;
+}
+
+/* ===== MODAL / POPUP ===== */
+.modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal-content {
+    position: relative;
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    width: 400px;
+    text-align: center;
+}
+
+.modal-content .close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.modal-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.modal-actions button {
+    flex: 1;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background-color: #014dd5;
+    color: #fff;
+    transition: background 0.3s;
+}
+
+.modal-actions button:hover {
+    background-color: #00379d;
+}
+

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_clinic">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Hub - Doctor</title>
+    <link rel="stylesheet" th:href="@{/css/createRecord.css}" />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
+    <script th:src="@{/js/createRecord.js}"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="content-wrapper">
+        <div class="patient-info">
+            <!-- Thay đổi sự kiện onclick để chuyển hướng đến ongoing-examination.html -->
+            <h2 class="back-link"><a th:href="@{/doctor/patient-list?ongoingexamination=true}">Quay lại</a></h2>
+            <h3 id="patient-id" th:text="${patient.patientCode}">BN2AF85</h3>
+            <p id="confirmation-time">
+                Xác nhận lúc:
+                <span th:text="${ #dates.format(appointment.appointmentDate, 'dd/MM/yyyy - HH:mm:ss')}">18/6/2024 - 07:44:12</span>
+            </p>
+            <div class="patient-data">
+                <p>
+                    <i class="fas fa-user"></i>
+                    <!-- Thêm icon FontAwesome -->
+                    <strong id="patient-name" th:text="${patient.user.fullName}"></strong>
+                </p>
+                <p id="patient-gender">Giới tính: <span>&nbsp;</span><span th:text="${ patient.user.gender}">Nữ</span></p>
+                <p id="patient-dob">Ngày sinh: <span>&nbsp;</span><span th:text="${#dates.format(patient.dob, 'dd/MM/yyyy')}"> 15/10/2003</span></p>
+                <p>Địa chỉ:<span>&nbsp;</span> <span th:text="${patient.address}">Hà Nội</span></p>
+                <p>Số điện thoại: <span>&nbsp;</span><span th:text="${patient.user.phoneNumber}"> 0989125050</span></p>
+                <p th:if="${record != null}" class="patient-history" id="viewHistoryLink">
+                    <a th:href="@{/doctor/patient-history/{id}(id=${patient.patientID})}">
+                        Lịch sử khám bệnh <i class="fas fa-angle-right"></i>
+                    </a>
+                </p>
+                <p th:if="${record != null}">
+                    Ngày khám:<span>&nbsp;</span> <span th:text="${#dates.format(record.examinationDate, 'dd/MM/yyyy')}">15/10/2023</span>
+                </p>
+                <p th:if="${record != null}">
+                    Chuyên khoa: <span>&nbsp;</span><span th:text="${record.doctor.specialty.specialtyName}">Nội</span>
+                </p>
+                <p th:if="${record == null}">
+                    Không có lịch sử khám bệnh.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="medical-record-form">
+            <h2>Tạo hồ sơ khám bệnh</h2>
+            <form id="medical-record-form" th:action="@{/doctor/services/create-record}" method="post" th:object="${recordDTO}">
+                <input type="hidden" name="patientId" th:value="${patient.patientID}" />
+                <input type="hidden" name="appointmentId" th:value="${appointment.appointmentID}"/>
+                <div class="form-group">
+                    <textarea th:field="*{symptoms}" id="symptoms" placeholder="Triệu chứng" rows="3" style="resize: none"></textarea>
+                </div>
+                <div class="form-group">
+                    <textarea th:field="*{diagnosis}" id="diagnosis" placeholder="Chuẩn đoán" rows="3" style="resize: none"></textarea>
+                </div>
+                <div class="form-group">
+                    <div class="date-input">
+                        <input type="text" th:field="*{examinationDate}" id="examination-date" placeholder="DD/MM/YY" />
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </div>
+                <!-- Checkbox Tái khám -->
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" th:field="*{reExamination}" id="re-examination" />
+                        Tái khám
+                    </label>
+                </div>
+
+                <!-- Phần Thực hiện xét nghiệm -->
+                <div class="form-group expandable-section">
+                    <div class="section-header" onclick="toggleSection('test-section')">
+                        <label>Thực hiện xét nghiệm <i class="fas fa-chevron-right section-icon"></i></label>
+                    </div>
+                    <div class="section-content" id="test-section" style="display: none">
+                        <table class="test-table">
+                            <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên dịch vụ</th>
+                                <th>Chỉ định thực hiện</th>
+                                <th>Tùy chọn</th>
+                            </tr>
+                            </thead>
+                            <tbody id="test-table-body"></tbody>
+                        </table>
+                        <div class="test-form">
+                            <div class="form-group">
+                                <input type="text" id="test-service-name" placeholder="Tên dịch vụ" />
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="test-instruction" placeholder="Chỉ định thực hiện" />
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="test-note" placeholder="Ghi chú" />
+                            </div>
+                            <button type="button" class="btn-add-test">Thêm</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phần Kê đơn thuốc -->
+                <div class="form-group expandable-section">
+                    <div class="section-header" onclick="toggleSection('prescription-section')">
+                        <label>Kê đơn thuốc <i class="fas fa-chevron-right section-icon"></i></label>
+                    </div>
+                    <div class="section-content" id="prescription-section" style="display: none">
+                        <table class="prescription-table">
+                            <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên thuốc</th>
+                                <th>Chỉ định sử dụng</th>
+                                <th>Số lượng</th>
+                                <th>Đơn giá</th>
+                            </tr>
+                            </thead>
+                            <tbody id="prescription-table-body">
+                            <!-- Dữ liệu sẽ được thêm động -->
+                            </tbody>
+                        </table>
+                        <div class="prescription-form">
+                            <div class="form-group">
+                                <input type="text" id="medicine-name" placeholder="Tên thuốc" />
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="medicine-instruction" placeholder="Chỉ định sử dụng" />
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="medicine-quantity" placeholder="Số lượng" />
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="medicine-price" placeholder="Đơn giá" />
+                            </div>
+                            <button type="button" class="btn-add-prescription">Thêm</button>
+                            <button type="button" class="btn-cancel">Hủy</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" id="submitRecord" class="btn-submit">Hoàn thành</button>
+            </form>
+        </div>
+    </div>
+    <div id="confirmationModal" class="modal" style="display: none">
+        <div class="modal-content">
+            <h3>Xác nhận hoàn thành khám bệnh</h3>
+            <p>Bạn có chắc chắn muốn hoàn thành khám bệnh?</p>
+            <div class="modal-buttons">
+                <button id="cancelBtn" class="btn-cancel-modal">Hủy</button>
+                <button id="confirmBtn" class="btn-confirm">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

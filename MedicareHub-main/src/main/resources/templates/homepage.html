@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_homepage">
+<head>
+  <meta charset="UTF-8">
+  <title>Medical Hub - Home</title>
+  <script th:src="@{/js/homepage.js}"></script>
+  <link rel="stylesheet" th:href="@{/css/homepage.css}" />
+</head>
+<body>
+<div layout:fragment="content">
+  <!-- Modal for Forms -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="hideForm()">×</span>
+
+      <!-- Login Form -->
+      <div class="form-container" id="login-form" th:fragment="login">
+        <h2>Đăng nhập</h2>
+        <form id="login-form-submit" action="/auth/login" method="post">
+          <input type="email" id="email" name="email" placeholder="Nhập email của bạn" required />
+          <input type="password" id="password" name="password" placeholder="Mật khẩu" required />
+          <button type="submit" class="btn-primary">Đăng nhập</button>
+        </form>
+        <p class="forgot-password"><a href="#" onclick="showForm('forgot')">Quên mật khẩu?</a></p>
+      </div>
+
+      <!-- Register Form -->
+      <div class="form-container" id="register-form" style="display: none" th:fragment="register">
+        <h2>Đăng ký Tài khoản</h2>
+        <form id="register-form-submit" action="/auth/register" method="post" th:object="${userDTO}">
+          <div class="error-message" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+          <input type="text" th:field="*{firstName}" placeholder="Tên của bạn" required/>
+
+
+          <div class="error-message" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+          <input type="text" th:field="*{lastName}" placeholder="Họ của bạn" required/>
+
+          <div class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+          <input type="email" th:field="*{email}" placeholder="Nhập email của bạn" required/>
+
+          <div class="error-message" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+          <input type="password" th:field="*{password}" placeholder="Mật khẩu" required/>
+
+
+          <div class="error-message" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+          <input type="password" th:field="*{confirmPassword}" placeholder="Xác nhận mật khẩu" required/>
+
+
+          <label>
+            <input type="checkbox" name="terms" required /> Tôi đồng ý với
+            <a th:href="@{/terms}" target="_blank" class="terms-link">điều khoản và điều kiện</a>
+          </label>
+          <button type="submit" class="btn-primary">Đăng ký</button>
+        </form>
+
+        <p>Bạn đã có tài khoản? <a href="#" class="register" onclick="showForm('login')">Đăng nhập</a></p>
+      </div>
+
+      <!-- Forgot Password Form -->
+      <div class="form-container" id="forgot-form" style="display: none" th:fragment="forgot">
+        <h2>Khôi phục mật khẩu</h2>
+        <p th:if="${successMessage == null}">Chúng tôi sẽ gửi bạn hướng dẫn bằng email</p>
+        <div class="errors" th:if="${error}" th:text="${error}"></div>
+        <div class="success-message" th:if="${successMessage}" th:text="${successMessage}"></div>
+        <form id="forgot-form-submit" action="auth/forgot-password" method="post">
+          <input type="email" name="email" placeholder="Nhập email của bạn" required />
+          <button type="submit" class="btn-primary">Gửi yêu cầu</button>
+        </form>
+        <p>Bạn muốn quay lại? <a href="#" class="register" onclick="showForm('login')">Đăng nhập</a></p>
+      </div>
+    </div>
+  </div>
+  <!-- Hero Section -->
+  <section id="hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>
+          Chúng tôi ở đây <br />
+          là vì sức khỏe của bạn
+        </h1>
+        <h3>
+          Người có sức khỏe là người có hy vọng - Người có hy vọng là người có tất cả <br />
+          Hãy trao cho chúng tôi niềm tin - Chúng tôi sẽ trao lại cho bạn hy vọng
+        </h3>
+        <div class="hero-text-btns">
+          <a href="#" class="hero-text-btns-left">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            Tìm bác sỹ
+          </a>
+          <a href="#" class="hero-text-btns-right">
+            Đặt lịch ngay
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+      <div class="hero-img">
+        <img th:src="@{/images/banner.png}" alt="Ảnh bác sĩ" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Appointment Search -->
+  <div class="appointment-search-container">
+    <h3>Trải nghiệm dịch vụ ngay</h3>
+    <div class="appointment-search">
+      <div class="appo-search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Tìm bác sỹ tại đây" />
+      </div>
+      <div class="appo-search-box">
+        <i class="fa-solid fa-location-dot"></i>
+        <input type="text" placeholder="Nhập địa chỉ của bạn" />
+      </div>
+      <button>
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- What We Provide Section -->
+  <section class="what-we-provide">
+    <div class="w-info-box">
+      <div class="w-info-icon">
+        <i class="fa-solid fa-briefcase-medical"></i>
+      </div>
+      <div class="w-info-text">
+        <strong>Dịch vụ khẩn cấp</strong>
+        <p>
+          Chúng tôi có một đội ngũ y tế chuyên nghiệp luôn sẵn sàng phục vụ bạn những lúc khẩn cấp.
+        </p>
+        <p>
+          <span class="call-now">Gọi ngay:</span>
+          <span class="phone-number">1900 1008</span>
+        </p>
+      </div>
+    </div>
+    <div class="w-info-box">
+      <div class="w-info-icon">
+        <i class="fa-solid fa-clock"></i>
+      </div>
+      <div class="w-info-text">
+        <strong>Đặt khám trực tuyến</strong>
+        <p>
+          Chúng tôi cung cấp dịch vụ đặt khám nhanh chóng, tiết kiệm thời gian và an toàn.
+        </p>
+        <p>
+          <span class="call-now">Đặt khám ngay</span>
+          <span class="phone-number">></span>
+        </p>
+      </div>
+    </div>
+    <div class="w-info-box">
+      <div class="w-info-icon">
+        <i class="fa-solid fa-calendar"></i>
+      </div>
+      <div class="w-info-text">
+        <strong>Hỗ trợ phục vụ 24/7</strong>
+        <p>
+          Chúng tôi luôn sẵn sàng giúp đỡ bạn bất cứ khi nào bạn cần. Hãy liên hệ với chúng tôi ngay nhé.
+        </p>
+        <p><span class="call-now">Liên hệ với chúng tôi</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Story Section -->
+  <section id="our_story">
+    <div class="our-story-img">
+      <img th:src="@{/images/story_img.jpg}" alt="Story Image" />
+    </div>
+    <div class="our-stroy-text">
+      <h2>Về chúng tôi</h2>
+      <p>
+        Chào mừng bạn đến với Medical Hub Hospital, nơi chúng tôi cam kết cung cấp dịch vụ chăm sóc sức khỏe hàng đầu và tiện lợi cho cộng đồng.
+        Chúng tôi tự hào giới thiệu ứng dụng đăng ký khám bệnh trực tuyến Medical Hub, mang đến giải pháp tiếp cận y tế thông minh cho bạn và gia đình.
+      </p>
+      <p>
+        Medical Hub - Đăng Ký và Đặt khám Online sẽ giúp bạn quản lý sức khỏe cá nhân một cách dễ dàng và hiệu quả hơn.
+        <a>Đọc thêm</a>
+      </p>
+      <div class="story-numbers-container">
+        <div class="story-numbers-box s-n-box1">
+          <strong>1000+</strong>
+          <span>Bệnh nhân hài lòng</span>
+        </div>
+        <div class="story-numbers-box s-n-box2">
+          <strong>215+</strong>
+          <span>Bác sĩ chuyên nghành</span>
+        </div>
+        <div class="story-numbers-box s-n-box3">
+          <strong>315+</strong>
+          <span>Nhiều cơ sở</span>
+        </div>
+        <div class="story-numbers-box s-n-box4">
+          <strong>106+</strong>
+          <span>Nhiều giải thưởng danh giá</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Support Contact Section -->
+  <section id="support-contact">
+    <div class="support-box">
+      <img th:src="@{/images/headphone.png}" alt="Dịch vụ đặt khám" />
+      <p>Dịch vụ đặt khám</p>
+    </div>
+    <div class="support-box">
+      <img th:src="@{/images/facebook.png}" alt="Hỗ trợ qua Facebook" />
+      <p>Hỗ trợ qua facebook</p>
+    </div>
+    <div class="support-box">
+      <img th:src="@{/images/zalo.png}" alt="Hỗ trợ qua Zalo" />
+      <p>Hỗ trợ qua zalo</p>
+    </div>
+    <div class="support-box">
+      <img th:src="@{/images/zalo-qr.png}" alt="Chat qua Zalo" />
+      <p>Chat qua zalo</p>
+    </div>
+  </section>
+
+  <!-- Subscribe Section -->
+  <section id="subscribe">
+    <h3>Đăng ký để nhận những thông báo mới nhất</h3>
+    <form class="subscribe-box">
+      <input type="email" placeholder="Example@gmail.com" />
+      <button>Đăng ký</button>
+    </form>
+  </section>
+
+  <!-- Các phần Chatbot đã được tích hợp trong layout -->
+</div>
+</body>
+</html>

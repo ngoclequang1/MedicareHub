@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_admin">
+<head>
+  <meta charset="UTF-8">
+  <title>Medical Hub - Doctor</title>
+  <link rel="stylesheet" th:href="@{/css/doctor.css}" />
+  <script th:src="@{/js/update.js}"></script>
+</head>
+<body>
+<div layout:fragment="content">
+  <main class="content">
+    <h2>HỒ SƠ BÁC SĨ</h2>
+    <div class="container">
+      <form th:action="@{/admin/doctors/update}" method="post" th:object="${doctor}" class="info-container" enctype="multipart/form-data" id="addForm">
+        <input type="hidden" th:field="*{doctorID}">
+
+        <div class="avatar">
+          <img id="doctorImage" th:src="@{${doctor.user.image}}" style="cursor: pointer;">
+          <!-- Hidden file input -->
+          <input type="file" id="imageUpload" name="imageFile" style="display: none;" />
+        </div>
+        <div class="info">
+          <ul>
+            <li>
+              <i class="fa-solid fa-user"></i>
+              Họ và tên: <input type="text" th:field="*{user.fullName}" class="input-field">
+            </li>
+            <li>
+              <i class="fa-solid fa-calendar-days"></i>
+              Ngày sinh: <input type="date" name="dob" th:value="${#dates.format(doctor.dob, 'yyyy-MM-dd')}" class="input-field">
+            </li>
+            <li>
+              <i class="fa-solid fa-venus-mars"></i>
+              Giới tính:
+              <select th:field="*{user.gender}" class="input-field">
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+              </select>
+            </li>
+            <li>
+              <i class="fa-solid fa-id-card"></i>
+              CCCD: <input type="text" th:field="*{user.identityNumber}" class="input-field">
+            </li>
+            <li>
+              <i class="fa-solid fa-id-badge"></i>
+              Giấy phép: <input type="text" th:field="*{licenseNumber}" class="input-field">
+            </li>
+            <li>
+              <i class="fa-solid fa-building"></i>
+              Khoa:
+              <select th:field="*{specialty.specialtyID}" class="input-field">
+                <option th:each="spec : ${specialty}" th:value="${spec.specialtyID}" th:text="${spec.specialtyName}"></option>
+              </select>
+            </li>
+            <li>
+              <i class="fa-solid fa-graduation-cap"></i>
+              Bằng cấp:
+              <select  th:field="*{academicDegree}" required>
+                <option value="" disabled selected>Chọn học vị *</option>
+                <option th:each="degree : ${degreeList}" th:value="${degree}"
+                        th:text="${degree.name() == 'BS' ? 'Bác sĩ' :
+                     (degree.name() == 'Ths' ? 'Thạc sĩ' :
+                     (degree.name() == 'TS' ? 'Tiến sĩ' : degree.name()))}">
+                </option>
+              </select>
+            </li>
+            <li>
+              <i class="fa-solid fa-location-dot"></i>
+              Địa chỉ phòng khám: <input type="text" th:field="*{clinicAddress}" class="input-field">
+            </li>
+            <li>
+              <i class="fa-solid fa-phone"></i>
+              Số điện thoại: <input type="text" th:field="*{user.phoneNumber}" class="input-field">
+            </li>
+            <li>
+              <i class="fa-solid fa-envelope"></i>
+              Email: <input type="email" th:field="*{user.email}" class="input-field">
+            </li>
+          </ul>
+          <!-- Dropdown to set the enable status -->
+          <div class="form-group">
+            <label for="enabled">Trạng thái:</label>
+            <select th:field="*{user.enabled}" class="input-field" id="enabled">
+              <option value="true">Còn hoạt động</option>
+              <option value="false">Không hoạt động</option>
+            </select>
+          </div>
+          <div class="btn">
+            <button type="button" class="btn-cancel" onclick="window.location.href='/admin/doctors';">Hủy</button>
+            <button type="submit" class="btn-save">Lưu</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_admin">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Hub - Doctor List</title>
+    <link rel="stylesheet" th:href="@{/css/specialtyList.css}" />
+    <script th:src="@{/js/newAdd.js}"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <main class="content">
+        <div class="top-header" >
+            <h2>Danh sách khoa</h2>
+            <button onclick="event.stopPropagation(); showForm('add')">+THÊM</button>
+        </div>
+        <div id="add" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="hideForm()">&times;</span>
+                <h2 class="form-title">Thêm nhân viên</h2>
+                <form th:object="${specialtyDTO}" action="/admin/specialty/save" method="post" enctype="multipart/form-data" id="addForm">
+                    <p class="required-note">(*) Thông tin bắt buộc</p>
+                    <label>Tên khoa *</label>
+                    <input type="text" class="ideal-width" th:field="*{specialtyName}" required>
+                    <span class="error-message" th:if="${#fields.hasErrors('specialtyName')}" th:errors="*{specialtyName}"></span>
+                    <span class="error-message" th:if="${#fields.hasErrors('specialtyDescription')}" th:errors="*{specialtyDescription}"></span>
+                    <label>Mô tả</label>
+                    <textarea id="description" th:field="*{specialtyDescription}"></textarea>
+                    <div class="buttons">
+                        <button type="button" class="cancel" id="cancelBtn" onclick="hideForm()">HỦY</button>
+                        <button type="submit" class="submit">THÊM</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Search Bar and Filters -->
+        <form method="get" action="/admin/specialty" class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="specialtyName" th:value="${specialtyName}" placeholder="Tìm kiếm khoa">
+            <button class="find" type="submit">ÁP DỤNG</button>
+        </form>
+
+        <!-- Table -->
+
+        <table>
+            <thead>
+            <tr>
+                <th class="specialty">Khoa</th>
+                <th class="head">Trưởng khoa</th>
+                <th class="number">Số bác sĩ</th>
+                <th class="status">Trạng thái</th>
+                <th class="option-column">Tùy chọn</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="specialty : ${specialties}">
+                <td class="specialty" th:text="${specialty.specialtyName}">Tên khoa</td>
+                <td class="head" th:text="${headDoctorMap[specialty.specialtyID]}"></td>
+                <td class="number" th:text="${specialty.numberOfDoctors}">Số bác sĩ</td>
+                <td>
+                    <span class="status-dot" th:classappend="${specialty.specialtyStatus} ? 'active' : 'inactive'">●</span>
+                    <span th:text="${specialty.specialtyStatus} ? ' Đang hoạt động' : ' Đã khóa'"></span>
+                </td>
+
+                <td class="option-column">
+                    <div class="option-content">
+                        <a th:href="@{/admin/specialty/detail/{id}(id=${specialty.specialtyID})}">
+                            <i class="fa-solid fa-circle-info" style="color: black"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Pagination Container -->
+        <div class="pagination-container">
+            <span class="page-info">Page <span th:text="${page + 1}"></span> of <span th:text="${pages}"></span></span>
+            <ul class="pagination">
+                <!-- Nút 'Trang trước' -->
+                <li th:if="${page > 0}">
+                    <a th:href="@{/admin/specialty(specialtyName=${specialtyName}, page=${page - 1})}">
+                        <i class="fa-solid fa-angle-left"></i>
+                    </a>
+                </li>
+                <li th:if="${page < pages - 1}">
+                    <a th:href="@{/admin/specialty(specialtyName=${specialtyName}, page=${page + 1})}">
+                        <i class="fa-solid fa-angle-right"></i>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </main>
+</div>
+</body>
+</html>

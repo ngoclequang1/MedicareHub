@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_admin">
+<head>
+  <meta charset="UTF-8">
+  <title>Medical Hub - Doctor List</title>
+  <link rel="stylesheet" th:href="@{/css/doctorList.css}" />
+  <script th:src="@{/js/newAdd.js}"></script>
+  <script>
+    function validateDob() {
+      const dobInput = document.getElementById("dob");
+      const dobValue = dobInput.value;
+      if (!dobValue) return true;
+
+      const dob = new Date(dobValue);
+      const today = new Date();
+      let age = today.getFullYear() - dob.getFullYear();
+      const monthDiff = today.getMonth() - dob.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+        age--;
+      }
+
+      if (age < 18) {
+        alert("Ngày sinh không hợp lệ. Bác sĩ phải ít nhất 18 tuổi.");
+        return false;
+      }
+      return true;
+    }
+  </script>
+</head>
+<body>
+<div layout:fragment="content">
+  <main class="content">
+    <div class="top-header" >
+      <h2>Danh sách nhân viên</h2>
+      <button onclick="event.stopPropagation(); showForm('add')">+THÊM</button>
+    </div>
+
+    <div id="add" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="hideForm()">&times;</span>
+        <h2 class="form-title">Thêm nhân viên</h2>
+        <form action="/admin/doctors/save" method="post" enctype="multipart/form-data" id="addForm" th:object="${doctorDTO}" onsubmit="return validateDob()">
+          <p class="required-note"> (*) Thông tin bắt buộc</p>
+          <div class="error-message" th:if="${#fields.hasErrors('doctor.user.fullName')}" th:errors="*{doctor.user.fullName}"></div>
+          <input type="text" class="ideal-width" th:field="*{doctor.user.fullName}" placeholder="Họ tên *" required>
+
+          <div class="row">
+            <input type="text" class="half-width" th:field="*{doctor.user.phoneNumber}" placeholder="Số điện thoại *" required>
+            <div class="error-message" th:if="${#fields.hasErrors('doctor.user.phoneNumber')}" th:errors="*{doctor.user.phoneNumber}"></div>
+            <input type="text" class="half-width" th:field="*{doctor.user.identityNumber}" placeholder="CCCD *" required>
+            <div class="error-message" th:if="${#fields.hasErrors('doctor.user.identityNumber')}" th:errors="*{doctor.user.identityNumber}"></div>
+          </div>
+
+          <div class="row">
+            <div class="half-width">
+              <label>Ngày sinh</label>
+              <div class="date-container">
+                <input type="date" th:field="*{dob}" id="dob" required>
+              </div>
+            </div>
+
+            <div class="gender-container">
+              <label>Giới tính</label>
+              <div class="gender-options">
+                <label><input type="radio" th:field="*{doctor.user.gender}" value="Nam"> Nam</label>
+                <label><input type="radio" th:field="*{doctor.user.gender}" value="Nữ"> Nữ</label>
+              </div>
+              <div class="error-message" th:if="${#fields.hasErrors('doctor.user.gender')}" th:errors="*{doctor.user.gender}"></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="half-width">
+              <label>Upload ảnh:</label>
+              <input type="file" name="imageFile" required>
+            </div>
+
+            <div class="half-width">
+              <label>Giấy phép hành nghề:</label>
+              <input type="text"
+                     th:field="*{licenseNumber}"
+                     th:placeholder="${#fields.hasErrors('licenseNumber') ? #fields.error('licenseNumber')[0] : 'Giấy phép *'}"
+                     required>
+            </div>
+          </div>
+
+          <div class="row" >
+            <div class="ideal-width">
+              <label>Địa chỉ phòng khám:</label>
+              <input type="text"
+                     th:field="*{clinicAddress}"
+                     th:placeholder="${#fields.hasErrors('clinicAddress') ? #fields.error('clinicAddress')[0] : 'Địa chỉ phòng khám *'}"
+                     required>
+            </div>
+          </div>
+
+          <div class="row" >
+            <div class="half-width">
+              <label>Bằng cấp:</label>
+              <select  th:field="*{academicDegree}" required>
+                <option value="" disabled selected>Chọn học vị *</option>
+                <option th:each="degree : ${degreeList}" th:value="${degree}"
+                        th:text="${degree.name() == 'BS' ? 'Bác sĩ' :
+                     (degree.name() == 'Ths' ? 'Thạc sĩ' :
+                     (degree.name() == 'TS' ? 'Tiến sĩ' : degree.name()))}">
+                </option>
+              </select>
+              <div class="error-message" th:if="${#fields.hasErrors('academicDegree')}" th:errors="*{academicDegree}"></div>
+            </div>
+
+            <div class="half-width">
+              <label>Chuyên khoa:</label>
+              <select th:field="*{doctor.specialty.specialtyID}" required>
+                <option value="" disabled selected>Chọn chuyên khoa</option>
+                <option th:each="spec : ${specialty}" th:value="${spec.specialtyID}" th:text="${spec.specialtyName}"></option>
+              </select>
+              <div class="error-message" th:if="${#fields.hasErrors('doctor.specialty.specialtyID')}" th:errors="*{doctor.specialty.specialtyID}"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="error-message" th:if="${#fields.hasErrors('dob')}" th:errors="*{dob}"></div>
+          </div>
+          <div class="buttons">
+            <button type="button" class="cancel" id="cancelBtn" onclick="hideForm()">Hủy</button>
+            <button type="submit" class="submit">Thêm</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+    <!-- Search Bar and Filters -->
+    <form method="get" action="/admin/doctors" class="search-container">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" name="fullName" th:value="${fullName}" placeholder="Tìm kiếm tài khoản">
+      <button class="find" type="submit">ÁP DỤNG</button>
+    </form>
+
+    <!-- Filter Buttons -->
+    <div class="filter-buttons">
+      <a class="btn blue" th:href="@{/admin/doctors(fullName=${fullName}, sortField='role', sortDir='asc')}">Bác sĩ</a>
+      <a class="btn orange" th:href="@{/admin/doctors(fullName=${fullName}, enabled=true, sortField='enabled', sortDir='desc')}">Còn hoạt động</a>
+    </div>
+
+    <!-- Sorting Dropdowns -->
+    <div class="sorting-options">
+      <a class="sort-btn"
+         th:href="@{/admin/doctors(fullName=${fullName}, sortField='fullName', sortDir=${sortField=='fullName' and sortDir=='asc' ? 'desc' : 'asc'})}">
+        HỌ TÊN
+        <i class="fa-solid fa-angle-down"
+           th:classappend="${sortField=='fullName' and sortDir=='desc'} ? ' rotate' : ''"></i>
+      </a>
+      <a class="sort-btn"
+         th:href="@{/admin/doctors(fullName=${fullName}, sortField='enabled', sortDir=${sortField=='enabled' and sortDir=='desc' ? 'asc' : 'desc'})}">
+        TRẠNG THÁI
+        <i class="fa-solid fa-angle-down"
+           th:classappend="${sortField=='enabled' and sortDir=='desc'} ? ' rotate' : ''"></i>
+      </a>
+    </div>
+
+
+
+    <!-- Table -->
+
+    <table>
+      <thead>
+      <tr>
+        <th class="full-name">Họ tên</th>
+        <th class="phone-number">Số điện thoại</th>
+        <th class="role-name">Vai trò</th>
+        <th class="status">Trạng thái</th>
+        <th class="option-column">Tùy chọn</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="doctor : ${doctors}">
+        <td class="full-name" th:text="${doctor.user.fullName}">Nguyễn Văn A</td>
+        <td class="phone-number" th:text="${doctor.user.phoneNumber}">0987462513</td>
+        <td class="role-name" th:text="${doctor.user.roleID.roleName == 'ROLE_DOCTOR' ? 'Bác sĩ' : doctor.user.roleID.roleName}">bác sĩ</td>
+        <td>
+          <span class="status-dot" th:classappend="${doctor.user.enabled} ? 'active' : 'inactive'">●</span>
+          <span th:text="${doctor.user.enabled} ? ' Còn hoạt động' : ' Không hoạt động'"></span>
+        </td>
+
+        <td class="option-column">
+          <div class="option-content">
+            <a th:href="@{/admin/doctors/detail/{id}(id=${doctor.doctorID})}">
+              <i class="fa-solid fa-circle-info" style="color: black"></i>
+            </a>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination Container -->
+    <div class="pagination-container">
+      <span class="page-info">Page <span th:text="${page + 1}"></span> of <span th:text="${pages}"></span></span>
+
+      <ul class="pagination">
+        <!-- Nút 'Trang trước' -->
+        <li th:if="${page > 0}">
+          <a th:href="@{/admin/doctors(page=${page - 1}, fullName=${fullName}, enabled=${enabled},sortField=${sortField}, sortDir=${sortDir})}">
+            <i class="fa-solid fa-angle-left"></i>
+          </a>
+        </li>
+
+        <!-- Nút 'Trang sau' -->
+        <li th:if="${page < pages - 1}">
+          <a th:href="@{/admin/doctors(page=${page + 1}, fullName=${fullName}, enabled=${enabled}, sortField=${sortField}, sortDir=${sortDir})}">
+            <i class="fa-solid fa-angle-right"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </main>
+</div>
+</body>
+</html>

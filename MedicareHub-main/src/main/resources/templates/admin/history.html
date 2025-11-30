@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_admin">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Hub - Schedule</title>
+    <link rel="stylesheet" th:href="@{/css/history.css}" />
+</head>
+<body>
+<div layout:fragment="content">
+    <main class="content">
+        <h2>Lịch sử khám bệnh</h2>
+
+        <!-- Search Bar and Filters -->
+        <form method="get" th:action="@{/admin/history}" class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="fullName" th:value="${fullName}" placeholder="Tìm kiếm tài khoản">
+            <button class="find" type="submit">ÁP DỤNG</button>
+        </form>
+
+        <!-- Table -->
+        <table>
+            <tbody>
+            <tr th:each="record : ${recordsPage.content}">
+                <td>
+                    <strong>Bệnh nhân: <span th:text="${record.patient.user.fullName}">Tên bệnh nhân</span></strong><br><br>
+                    Ngày khám: <span th:text="${#dates.format(record.examinationDate, 'dd/MM/yyyy')}">Ngày khám</span>
+                </td>
+                <td class="status">
+                    <a class="pending" th:if="${record.prescriptions.?[paid == false].size() > 0}"
+                       th:href="@{/admin/history/detail/{id}(id=${record.recordID})}">Chưa thanh toán</a>
+                    <a class="completed" th:if="${record.prescriptions.?[paid == false].size() == 0}"
+                       th:href="@{/admin/history/detail/{id}(id=${record.recordID})}">Hoàn thành</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Pagination Container -->
+        <div class="pagination-container">
+            <span class="page-info">Page <span th:text="${recordsPage.number + 1}"></span> of <span th:text="${recordsPage.totalPages}"></span></span>
+
+            <ul class="pagination">
+                <!-- Nút 'Trang trước' -->
+                <li th:if="${recordsPage.hasPrevious()}">
+                    <a th:href="@{/admin/history(page=${recordsPage.number - 1}, fullName=${fullName})}">
+                        <i class="fa-solid fa-angle-left"></i>
+                    </a>
+                </li>
+
+                <!-- Nút 'Trang sau' -->
+                <li th:if="${recordsPage.hasNext()}">
+                    <a th:href="@{/admin/history(page=${recordsPage.number + 1}, fullName=${fullName})}">
+                        <i class="fa-solid fa-angle-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </main>
+</div>
+</body>
+</html>

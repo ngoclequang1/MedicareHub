@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_patient">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Hub - Report</title>
+    <link rel="stylesheet" th:href="@{/css/patientRecord.css}"/>
+</head>
+<body>
+<div layout:fragment="content">
+    <section id="hero">
+        <main class="patient-record-container">
+            <div class="content-wrapper container">
+                <!-- Sidebar + Breadcrumb cùng 1 cột -->
+                <div class="sidebar">
+                    <div class="breadcrumb">
+                        <a th:href="@{/patient/home}">Trang chủ</a> >
+                        <a th:href="@{/patient/appointment-list}">Phiếu khám bệnh</a>
+                    </div>
+
+                    <a th:href="@{/patient/create-report}">
+                        <button class="btn-add-profile">
+                            <i class="fa-solid fa-user-plus"></i> Thêm hồ sơ
+                        </button>
+                    </a>
+
+                    <a th:href="@{/patient/report}">
+                        <button class="btn-sidebar">
+                            <i class="fa-solid fa-folder-open"></i> Hồ sơ bệnh nhân
+                        </button>
+                    </a>
+
+                    <a th:href="@{/patient/appointment-list}">
+                        <button class="btn-sidebar active">
+                            <i class="fa-solid fa-file-medical"></i> Phiếu khám bệnh
+                        </button>
+                    </a>
+
+                    <a th:href="@{/patient/record}">
+                        <button class="btn-sidebar">
+                            <i class="fa-solid fa-calendar-days"></i> Lịch sử khám bệnh
+                        </button>
+                    </a>
+
+                    <a th:href="@{/patient/reminder}">
+                        <button class="btn-sidebar">
+                            <i class="fa-solid fa-bell"></i> Thông báo
+                        </button>
+                    </a>
+                </div>
+                <main class="patient-record-container">
+                    <div class="record-wrapper">
+                        <div class="patient-name-header" th:text="${#authentication.principal.fullName}"></div>
+                        <div class="records">
+                            <div th:each="entry : ${appointmentMap}"
+                                 th:with="redirectUrl=(${entry.value.status} == 'Chờ xác nhận'
+                ? '/patient/preview-appointment?appointmentId=' + ${entry.key}
+                : '/patient/appointment-list/detail?appointmentId=' + ${entry.key})">
+                                <div class="record-card"
+                                     th:onclick="|window.location.href='@{${redirectUrl}}'|"
+                                     style="cursor: pointer;">
+                                    <div class="record-info">
+                                        <p><i class="fa-solid fa-heart-circle-plus"></i> Chuyên khoa:
+                                            <span th:text="${entry.value.specialtyName}"></span>
+                                        </p>
+                                        <p><i class="fa-solid fa-user"></i>
+                                            <span class="doctor-name" th:text="${entry.value.doctorAcademicDegree}"></span>
+                                            <span class="doctor-name" th:text="${entry.value.doctorName}"></span>
+                                        </p>
+                                        <p><i class="fa-solid fa-calendar-days"></i> Ngày khám:
+                                            <span th:text="${#dates.format(entry.value.appointmentDate, 'dd/MM/yyyy')}"></span>
+                                        </p>
+                                        <p><i class="fa-solid fa-chart-bar"></i> Số thứ tự:
+                                            <span th:text="${entry.value.queueNumber}"></span>
+                                        </p>
+                                        <p><i class="fa-solid fa-circle-check"></i> Trạng thái:
+                                            <span class="status not-checked" th:text="${entry.value.status}"></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+            </div>
+        </main>
+    </section>
+
+</div>
+</body>
+</html>

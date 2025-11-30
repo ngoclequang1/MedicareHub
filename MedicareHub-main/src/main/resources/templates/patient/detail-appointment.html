@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_patient">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Hub - Report</title>
+    <link rel="stylesheet" th:href="@{/css/detailRecord.css}"/>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const popup = document.getElementById('reminder-popup');
+            const popupContent = popup.querySelector('.popup-content');
+            const cancelBtn = document.getElementById('popup-cancel');
+            const reminderButtons = document.querySelectorAll('.reminder-btn');
+            const appointmentIdInput = document.getElementById('popup-appointment-id');
+            const reminderTimeInput = document.getElementById('reminderTime');
+
+            function pad(n) {
+                return n < 10 ? '0' + n : n;
+            }
+
+            function getLocalDateTimeString() {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = pad(now.getMonth() + 1);
+                const day = pad(now.getDate());
+                const hour = pad(now.getHours());
+                const minute = pad(now.getMinutes());
+                return `${year}-${month}-${day}T${hour}:${minute}`;
+            }
+
+            function setMinDateTime() {
+                const local = getLocalDateTimeString();
+                reminderTimeInput.min = local;
+                reminderTimeInput.value = local;
+            }
+
+            reminderButtons.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const appointmentId = this.getAttribute('data-appointment-id');
+                    appointmentIdInput.value = appointmentId;
+                    setMinDateTime();
+                    popup.classList.remove('hidden');
+                });
+            });
+
+            cancelBtn.addEventListener('click', function () {
+                popup.classList.add('hidden');
+            });
+
+            popup.addEventListener('click', function (e) {
+                if (!popupContent.contains(e.target)) {
+                    popup.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <section id="hero">
+        <main class="patient-record-container">
+            <div class="content-wrapper container">
+                <!-- Sidebar + Breadcrumb cùng 1 cột -->
+                <div class="sidebar">
+                    <div class="breadcrumb">
+                        <a th:href="@{/patient/home}">Trang chủ</a> >
+                        <a>Chi tiết phiếu khám bệnh</a>
+                    </div>
+                </div>
+                <div class="main-content">
+                    <button type="button"
+                            class="reminder-btn"
+                            th:attr="data-appointment-id=${appointment.appointmentID}">
+                        <i class="fa-solid fa-bell" th:if="${appointment.reminderStatus}"></i>
+                        <i class="fa-regular fa-bell" th:if="${!appointment.reminderStatus}"></i>
+                    </button>
+                    <div class="ticket">
+                        <!-- Khối trên (lớn hơn) -->
+                        <div class="ticket-top">
+                            <h2>Phiếu khám bệnh</h2>
+                            <p class="order-label">Số thứ tự tiếp nhận</p>
+                            <div class="order-number" th:text="${appointment.queueNumber}">07</div>
+
+                            <div class="ticket-info">
+                                <p>
+                                    <i class="fa-solid fa-heart-circle-plus"></i>
+                                    Chuyên khoa: <span th:text="${appointment.doctor.specialty.specialtyName}"> Tổng quát</span>
+                                </p>
+                                <p>
+                                    <i class="fa-solid fa-user-doctor"></i>
+                                    <span th:text="${appointment.doctor.academicDegree}"></span>
+                                    <span th:text="${appointment.doctor.user.fullName}">ThS Nguyễn Văn A</span>
+                                </p>
+                                <p>
+                                    <i class="fa-solid fa-calendar-days"></i>
+                                    Ngày khám: <span th:text="${#dates.format(appointment.appointmentDate, 'dd/MM/yyyy')}">18/04/2025</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="dashed"></div>
+
+                        <!-- Khối dưới (nhỏ hơn) -->
+                        <div class="ticket-bottom">
+                            <p class="barcode-title">Mã phiếu khám</p>
+                            <div class="barcode">
+                                <img th:src="@{/images/barcode.png}" alt="Barcode" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-return">
+                    <a th:href="@{/patient/appointment-list}">
+                        <button class="btn-primary">Quay lại</button>
+                    </a>
+                </div>
+
+            </div>
+        </main>
+    </section>
+    <div id="reminder-popup" class="popup-overlay hidden">
+        <div class="popup-content">
+            <h2>Nhắc cuộc hẹn</h2>
+            <form th:action="@{/patient/appointment/notification}" method="post">
+                <input type="hidden" name="appointmentId" id="popup-appointment-id" />
+
+                <div class="form-group">
+                    <label for="reminderTime">Thời gian nhắc:</label>
+                    <input type="datetime-local" id="reminderTime" name="reminderTime" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Nội dung nhắc:</label>
+                    <textarea id="message" name="message" rows="3" required></textarea>
+                </div>
+
+                <div class="popup-actions">
+                    <button type="submit" class="submit-btn">Lưu nhắc hẹn</button>
+                    <button type="button" class="cancel-btn" id="popup-cancel">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_patient">
+<head>
+  <meta charset="UTF-8">
+  <title>Medical Hub - Booking</title>
+  <script th:src="@{/js/appointment.js}"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <link rel="stylesheet" th:href="@{/css/createAppointment.css}">
+
+</head>
+<body>
+<div layout:fragment="content">
+  <section class="booking-section">
+    <div class="breadcrumb">
+      <a th:href="@{/patient/home}">Trang chủ</a> > <a th:href="@{/patient/booking}">Đặt khám</a> > <span>Chọn bác sĩ</span>
+    </div>
+
+
+    <div id="create" class="modal">
+      <div class="modal-content">
+        <form th:action="@{/patient/create-appointment}" method="post" id="addForm">
+          <input type="hidden" id="doctorID" name="doctorID">
+          <div class="calendar">
+            <input type="date" id="appointmentDate" name="appointmentDate" hidden="hidden"
+                   th:attr="min=${minDates[doctorID]}, max=${maxDates[doctorID]}"
+                   th:value="${selectedSchedule?.startTime != null ? #dates.format(selectedSchedule.startTime, 'yyyy-MM-dd') : ''}">
+          </div>
+          <div class="popup-buttons">
+            <button class="confirm-btn" type="submit">Xác nhận</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="choose-doctor-wrapper">
+
+      <div class="choose-doctor-header">
+        VUI LÒNG CHỌN BÁC SĨ
+      </div>
+      <form th:action="@{/patient/create-appointment}" method="get" class="search-filter-container">
+        <div class="search-box">
+          <input type="text" th:value="${fullName}" placeholder="Tìm bác sĩ">
+          <button type="submit"><i class="fa-solid fa-search"></i></button>
+        </div>
+
+        <div class="filter-box">
+          <!-- Filter theo academicDegree -->
+          <div class="select-wrapper">
+            <select name="academicDegree" onchange="this.form.submit()">
+              <option value="" th:selected="${academicDegree == null}">Tất cả</option>
+              <option th:each="degree : ${degreeList}"
+                      th:value="${degree}"
+                      th:text="${degree.name() == 'BS' ? 'Bác sĩ' : (degree.name() == 'Ths' ? 'Thạc sĩ' : (degree.name() == 'TS' ? 'Tiến sĩ' : degree.name()))}"
+                      th:selected="${degree == academicDegree}">
+              </option>
+            </select>
+
+          </div>
+          <!-- Filter theo specialty -->
+          <div class="select-wrapper">
+            <select name="specialty" onchange="this.form.submit()">
+              <option value="" th:selected="${specialtyId == null}">Tất cả</option>
+              <option th:each="s : ${specialty}"
+                      th:value="${s.specialtyID}"
+                      th:text="${s.specialtyName}"
+                      th:selected="${s.specialtyID == specialtyId}">
+              </option>
+            </select>
+          </div>
+        </div>
+      </form>
+
+      <div class="doctor-list-wrapper">
+        <div class="doctor-card" th:each="doctor : ${doctors}"
+             onclick="selectDoctor(this)"
+             th:attr="data-doctor-id=${doctor.doctorID},
+                data-min-date=${#lists.isEmpty(doctorSchedules[doctor.doctorID]) ? '' : #dates.format(doctorSchedules[doctor.doctorID][0].startTime, 'yyyy-MM-dd')},
+                data-max-date=${#lists.isEmpty(doctorSchedules[doctor.doctorID]) ? '' : #dates.format(doctorSchedules[doctor.doctorID][0].endTime, 'yyyy-MM-dd')}">
+          <p><i class="fa-solid fa-user"></i> <span class="doctor-name" th:text="${doctor.user.fullName}">ThS Nguyễn Văn A</span></p>
+          <p><i class="fa-solid fa-heart"></i> Chuyên khoa: <span th:text="${doctor.specialty.specialtyName}">Chuyên khoa</span></p>
+          <p><i class="fa-solid fa-calendar-days"></i> Lịch khám: <span th:if="${doctorSchedules[doctor.doctorID] != null}">
+      <span th:each="schedule : ${doctorSchedules[doctor.doctorID]}">
+          <span th:text="${#dates.format(schedule.startTime, 'dd/MM/yyyy HH:mm')}"></span> -
+          <span th:text="${#dates.format(schedule.endTime, 'dd/MM/yyyy HH:mm')}"></span><br/>
+      </span>
+    </span>
+            <span th:if="${doctorSchedules[doctor.doctorID] == null or #lists.isEmpty(doctorSchedules[doctor.doctorID])}">
+      Chưa có lịch khám
+    </span></p>
+          <p><i class="fa-solid fa-coins"></i> Chi phí: 150.000 VNĐ</p>
+        </div>
+      </div>
+
+
+
+      <div class="pagination">
+        <!-- Nút Previous -->
+        <span th:if="${page > 0}">
+          <a th:href="@{/patient/create-appointment(page=${page - 1}, fullName=${fullName}, specialty=${specialtyId}, sortField=${sortField}, sortDir=${sortDir})}"><i class="fa-solid fa-angle-left"></i></a>
+        </span>
+
+        <!-- Hiển thị danh sách trang -->
+        <span th:each="i : ${#numbers.sequence(0, pages - 1)}">
+        <!-- Nếu trang hiện tại đang active, hiển thị dưới dạng <span> -->
+        <p th:if="${i == page}" th:text="${i + 1}" class="active"></p>
+
+          <!-- Nếu không phải trang active, hiển thị dưới dạng <a> -->
+          <a th:if="${i != page}"
+           th:href="@{/patient/create-appointment(page=${i}, fullName=${fullName}, specialty=${specialtyId}, sortField=${sortField}, sortDir=${sortDir})}"
+           th:text="${i + 1}">
+          </a>
+        </span>
+
+        <!-- Nút Next -->
+        <span th:if="${page < pages - 1}">
+          <a th:href="@{/patient/create-appointment(page=${page + 1}, fullName=${fullName}, specialty=${specialtyId}, sortField=${sortField}, sortDir=${sortDir})}"><i class="fa-solid fa-angle-right"></i></a>
+        </span>
+      </div>
+
+    </div>
+  </section>
+</div>
+</body>
+</html>

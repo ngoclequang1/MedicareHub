@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_admin">
+<head>
+  <meta charset="UTF-8">
+  <title>Medical Hub - Admin</title>
+  <link rel="stylesheet" th:href="@{/css/adminDetail.css}" />
+</head>
+<body>
+<div layout:fragment="content">
+  <h2 class="section-title">Xem chi tiết tài khoản</h2>
+  <form th:action="@{/admin/admin-detail}" method="post">
+    <table class="user-info">
+      <tr>
+        <th>Họ tên</th>
+        <td><strong>
+          <input type="text" th:field="${admin.user.fullName}">
+          </strong></td>
+      </tr>
+      <tr>
+        <th>Vai trò</th>
+        <td><strong>
+          <input type="text" th:value="${admin.user.roleID.roleName== 'ROLE_ADMIN' ? 'Admin' : admin.user.roleID.roleName}" readonly>
+        </strong></td>
+      </tr>
+      <tr>
+        <th>Địa chỉ</th>
+        <td><strong>
+          <input type="text" th:field="${admin.address}">
+          </strong></td>
+      </tr>
+      <tr>
+        <th>Số điện thoại</th>
+        <td><strong>
+          <input type="text" th:field="${admin.user.phoneNumber}">
+          </strong></td>
+      </tr>
+      <tr>
+        <th>CCCD</th>
+        <td><strong>
+          <input type="text" th:field="${admin.user.identityNumber}">
+          </strong></td>
+      </tr>
+      <tr>
+        <th>Ngày sinh</th>
+        <td><strong><input type="text" value="01/01/1991" readonly></strong></td>
+      </tr>
+      <tr>
+        <th>Trạng thái</th>
+        <td>
+          <span class="status-dot" th:classappend="${admin.user.enabled} ? 'active' : 'inactive'">●</span>
+          <span th:text="${admin.user.enabled} ? ' Còn hoạt động' : ' Không hoạt động'"></span>
+          <button type="submit" class="update-btn">Cập nhật</button>
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
+</body>
+</html>

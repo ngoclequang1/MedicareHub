@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_patient">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Hub - Booking</title>
+    <link rel="stylesheet" th:href="@{/css/patientBooking.css}" />
+    <script th:src="@{/js/booking.js}"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <section id="hero">
+    <main class="booking-section">
+        <div class="booking-header">
+            <div class="breadcrumb">
+                <a th:href="@{/patient/home}">Trang chủ</a> > <span>Đặt khám ngay</span>
+            </div>
+            <a th:href="@{/patient/create-report}" class="btn-add-profile">
+                <i class="fa-solid fa-user-plus"></i> Thêm hồ sơ
+            </a>
+        </div>
+        <div class="patient-card">
+            <h3>Hồ sơ bệnh nhân</h3>
+            <div th:if="${patient != null}" class="patient-info">
+                <ul>
+                    <li><i class="fa-solid fa-user"></i><span>Họ và tên:</span> <strong class="text-purple" th:text="${#authentication.principal.fullName}"></strong></li>
+                    <li><i class="fa-solid fa-calendar-days"></i><span>Ngày sinh:</span> <span th:text="${#dates.format(patient?.dob, 'dd/MM/yyyy')}"></span> </li>
+                    <li><i class="fa-solid fa-phone"></i><span>SĐT:</span> <span  th:text="${patient?.user?.phoneNumber}"></span></li>
+                    <li><i class="fa-solid fa-venus-mars"></i><span>Giới tính:</span> <span th:text="${patient?.user?.gender}"></span></li>
+                    <li><i class="fa-solid fa-location-dot"></i><span>Địa chỉ:</span> <span th:text="${patient?.address}"></span></li>
+                    <li><i class="fa-solid fa-globe"></i><span>Dân tộc:</span> <span th:text="${patient?.ethnicity}"></span></li>
+                </ul>
+
+                <div class="action-btns">
+                    <div class="left-actions">
+                        <button type="button" class="delete-text"  th:attr="data-id=${patient.patientID}">
+                            <i class="fa-solid fa-trash"></i> Xóa hồ sơ
+                        </button>
+                        <a th:href="@{/patient/update-report}" class="edit-text">
+                            <i class="fa-solid fa-pen"></i> Chỉnh sửa
+                        </a>
+                    </div>
+                    <a th:href="@{/patient/create-appointment}" class="next-btn">
+                        <i class="fa-solid fa-arrow-right"></i> <span>Tiếp tục</span>
+                    </a>
+                </div>
+            </div>
+
+            <div th:unless="${patient != null}" class="no-record">
+                <img th:src="@{/images/no-record.png}" alt="No record" />
+                <p>Không có hồ sơ bệnh nhân nào</p>
+            </div>
+        </div>
+        <div class="popup-overlay" id="delete-popup" style="display:none;">
+            <div class="popup-content">
+                <h2>Xác nhận</h2>
+                <p>Bạn muốn xóa hồ sơ này chứ?</p>
+                <div class="popup-actions">
+                    <button id="cancel-delete">Không, đừng xóa.</button>
+                    <button id="confirm-delete">Có, hãy xóa đi.</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    </section>
+</div>
+</body>
+</html>

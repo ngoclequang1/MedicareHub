@@ -1,0 +1,304 @@
+.main-content {
+    flex-grow: 1;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px
+}
+/* Header container */
+.header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px 20px;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+/* Header Title */
+.header-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 10px;
+    margin-bottom: 20px;
+}
+
+
+/* Main Content */
+.content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: white;
+    border-radius: 10px;
+}
+
+/* Search Bar */
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.search-container input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.apply {
+    background: #28a745;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Filter Buttons */
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.btn {
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.blue {
+    background: #2d55e7;
+    color: white;
+}
+
+.orange {
+    background: #ff8c00;
+    color: white;
+}
+
+/* Dropdowns */
+/* Dropdown Styling */
+.dropdowns {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.dropdowns select {
+    width: 160px; /* Adjust width */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: white;
+    font-size: 14px;
+    cursor: pointer;
+    color: #888; /* Placeholder text color */
+}
+
+/* Change text color when user selects an option */
+.dropdowns select:focus,
+.dropdowns select:not(:invalid) {
+    color: black;
+}
+
+/* Dropdown Hover & Focus Effect */
+.dropdowns select:hover {
+    border-color: #2d55e7;
+}
+
+.dropdowns select:focus {
+    outline: none;
+    border-color: #0547AC;
+    box-shadow: 0 0 5px rgba(5, 71, 172, 0.5);
+}
+
+.paid-header {
+    background-color: #009CE2; /* Blue background */
+    color: white; /* White text */
+    padding: 12px 20px; /* Spacing inside the header */
+    display: flex; /* Align items in a row */
+    justify-content: space-between; /* Space between doctor info & payment status */
+    align-items: center; /* Align items vertically */
+    border-radius: 5px; /* Rounded corners */
+    font-family: Arial, sans-serif; /* Matching font */
+}
+
+.patient-name {
+    font-weight: bold;
+    font-size: 18px;
+    display: block;
+}
+
+.exam-time {
+    font-size: 18px;
+    display: block;
+    margin-top: 3px; /* Small spacing below name */
+}
+
+.paid-status {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+.paid-status select {
+    background-color: #009CE2;
+    color: white;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    white-space: nowrap;
+    padding: 3px;
+}
+
+.paid-status option {
+    border: none;
+}
+select.no-focus {
+    border: none;
+    outline: none;
+    background: transparent;
+    font: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+select.no-focus:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+select.no-focus option {
+    border: none;
+}
+/* Appointment Details */
+.details-container {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: -5px;
+    border: 1px solid #ccc;
+}
+.details {
+    display: flex; /* Arrange cards in a row */
+    gap: 20px; /* Space between the two cards */
+    margin-top: 15px; /* Space above the section */
+}
+
+.info-card {
+    flex: 1; /* Equal width for both cards */
+    padding: 15px;
+    border: 1px solid #000; /* Black border */
+    border-radius: 8px; /* Rounded corners */
+    font-family: Arial, sans-serif; /* Matching font */
+}
+
+.info-card p {
+    margin: 5px 0; /* Spacing between lines */
+    font-size: 20px;
+}
+
+/* Bold labels */
+.info-card p strong {
+    font-weight: bold;
+}
+
+/* Highlight diagnosis */
+.diagnosis {
+    font-weight: bold;
+    color: red;
+}
+
+.details-left,
+.details-right {
+    width: 50%;
+}
+
+.details-box {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Labels */
+.details-box b {
+    display: inline-block;
+    width: 100px;
+    font-weight: bold;
+}
+
+/* Status */
+.status {
+    color: #009CE2;
+    font-weight: bold;
+}
+
+/* Diagnosis */
+.red {
+    color: red;
+}
+
+/* Table Styles */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 10px;
+    border: 2px solid #000; /* Darker border for a more defined look */
+}
+
+/* Table Header */
+table th {
+    background: #009CE2; /* Dark blue header */
+    color: white;
+    font-weight: bold;
+    padding: 12px;
+    text-align: center;
+    border: 2px solid #000; /* Consistent bold border */
+}
+
+/* Table Cells */
+table td {
+    padding: 12px;
+    text-align: center; /* Center align content */
+    border: 2px solid #000; /* Keep borders consistent */
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Alternate Row Background */
+table tr:nth-child(even) {
+    background: #f2f2f2;
+}
+
+/* Last row for total price */
+.total-row {
+    background: white; /* Blue background for emphasis */
+    color: black;
+    font-weight: bold;
+}
+
+.total-label {
+    text-align: right;
+    padding-right: 15px;
+}
+
+.total-price {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+

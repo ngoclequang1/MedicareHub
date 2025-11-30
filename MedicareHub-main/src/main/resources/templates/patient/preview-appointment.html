@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_patient">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Hub - Booking</title>
+    <link rel="stylesheet" th:href="@{/css/previewAppointment.css}">
+    <script th:src="@{/js/preview.js}"></script>
+
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="confirmation-wrapper">
+        <div class="breadcrumb">
+            <a th:href="@{/patient/home}">Trang chủ</a> > <strong>Xác nhận thông tin</strong>
+        </div>
+        <div class="patient-content">
+            <div class="table-wrapper">
+                <table class="confirm-table">
+                    <thead>
+                    <tr>
+                        <th colspan="5" class="table-title">
+                            <i class="fa-solid fa-clipboard-check"></i> XÁC NHẬN THÔNG TIN ĐẶT KHÁM
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Chuyên khoa</th>
+                        <th>Bác sĩ</th>
+                        <th>Thời gian khám</th>
+                        <th>Tiền khám</th>
+                        <th style="width: 60px;"></th>
+                    </tr>
+                    </thead>
+                    <tbody th:if="${appointment != null}">
+                    <tr>
+                        <td th:text="${appointment.specialtyName}">Chuyên khoa</td>
+                        <td>
+                            <span th:text="${appointment.doctorAcademicDegree}"></span>
+                            <span th:text="${appointment.doctorName}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(appointment.appointmentDate, 'EEEE')}">Thứ</span>
+                            <br>
+                            <span th:text="${#dates.format(appointment.appointmentDate, 'dd/MM/yyyy')}">Ngày/Tháng/Năm</span>
+                        </td>
+                        <td>150.000 VNĐ</td>
+                        <td>
+                            <i class="fa-solid fa-trash remove-btn" onclick="openDeleteModal()"></i>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="confirm-table">
+                    <thead>
+                    <tr>
+                        <th colspan="2" class="table-title"><i class="fa-solid fa-user"></i> THÔNG TIN BỆNH NHÂN</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr><td><i class="fa-solid fa-user"></i> Họ và tên:<td th:text="${patient.user.fullName}">Họ tên bệnh nhân</td>
+                    <tr><td><i class="fa-solid fa-calendar-days"></i> Ngày sinh:</td><td th:text="${patient.dob}">Ngày sinh</td></tr>
+                    <tr><td><i class="fa-solid fa-phone"></i> Số điện thoại:</td><td th:text="${patient.user.phoneNumber}">Số điện thoại</td></tr>
+                    <tr><td><i class="fa-solid fa-venus-mars"></i> Giới tính:</td><td th:text="${patient.user.gender}">Giới tính</td></tr>
+                    <tr><td><i class="fa-solid fa-location-dot"></i> Địa chỉ:</td><td th:text="${patient.address}">Địa chỉ</td></tr>
+                    <tr><td><i class="fa-solid fa-globe"></i> Dân tộc:</td><td th:text="${patient.ethnicity}">Dân tộc</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="confirm-actions">
+                <a th:href="@{/patient/create-appointment}" class="btn-secondary">
+                    <i class="fa-solid fa-layer-group"></i> Chọn thêm chuyên khoa
+                </a>
+                <form th:if="${appointment != null and appointment.status == 'Chờ xác nhận'}"
+                      th:action="@{/patient/confirm-appointment}" method="post">
+                    <input type="hidden" name="appointmentId" th:value="${appointmentId}" />
+                    <button type="submit" class="btn-primary">
+                        <i class="fa-solid fa-circle-check"></i> Xác nhận
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <div id="deleteModal" class="modal" style="display: none">
+        <div class="modal-content">
+            <span class="close" onclick="closeDeleteModal()">&times;</span>
+            <h2>Xác nhận</h2>
+            <p>Bạn muốn xóa lịch hẹn này chứ?</p>
+            <div class="modal-actions">
+                <a>
+                    <button onclick="closeDeleteModal()">Không, đừng xóa.</button>
+                </a>
+                <form action="/patient/preview-appointment" method="post">
+                    <input type="hidden" name="appointmentId" th:value="${appointmentId}" />
+                    <button type="submit">Có, hãy xóa đi.</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

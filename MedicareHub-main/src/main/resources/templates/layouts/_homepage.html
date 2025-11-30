@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medical Hub</title>
+  <link rel="stylesheet" th:href="@{/css/homepage.css}" />
+  <link rel="shortcuticon" th:href="@{/images/fav-icon.png}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/38ea0ae7ae.js" crossorigin="anonymous"></script>
+  <script th:src="@{/js/chatbot.js}"></script>
+</head>
+<body>
+<!-- Navbar & Hero Header -->
+<section id="hero">
+  <nav class="navigation">
+    <a th:href="@{/home}" class="logo"><span>Medical</span>Hub</a>
+    <ul class="menu">
+      <li><a th:href="@{/home}" onclick="smoothScroll(event, '')">Trang chủ</a></li>
+      <li><a href="#our_story" onclick="smoothScroll(event, 'our_story')">Giới thiệu</a></li>
+      <li><a href="#support-contact" onclick="smoothScroll(event, 'support-contact')">Liên hệ</a></li>
+    </ul>
+    <a class="nav-signin-btn" onclick="showForm('login')">Đăng nhập</a>
+    <a class="nav-signup-btn" onclick="showForm('register')">Đăng ký</a>
+  </nav>
+  <!-- Nội dung trang sẽ được chèn tại đây -->
+  <div layout:fragment="content">
+    <!-- content page will override this -->
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-left">
+      <h3><span class="highlight">Medical</span> Hub</h3>
+      <p>
+        Địa chỉ: Số 1, phố Trần Hưng Đạo, phường Bạch Đằng, quận Hai Bà Trưng, thành phố Hà Nội.
+      </p>
+      <p>
+        Website: <a href="https://medical-hub.web.app">https://medical-hub.web.app</a>
+      </p>
+      <p>Email: medicalhub@gmail.com</p>
+      <p>Điện thoại: 0987.199.555</p>
+    </div>
+    <div class="footer-center">
+      <h4>Về chúng tôi</h4>
+      <ul>
+        <li><a href="#">Về chúng tôi</a></li>
+        <li><a href="#">Giới thiệu</a></li>
+        <li><a href="#">Tuyển dụng</a></li>
+        <li><a href="#">Điều khoản sử dụng</a></li>
+        <li><a href="#">Chính sách bảo mật</a></li>
+      </ul>
+    </div>
+    <div class="footer-right">
+      <img th:src="@{/images/map.png}" alt="Map" />
+    </div>
+  </div>
+  <hr />
+  <p class="footer-bottom">© 2024 MedicalHub. All rights reserved.</p>
+</footer>
+
+
+<!-- Chatbot elements -->
+<div id="chatbot-button" class="floating-button">
+  <img th:src="@{/images/chatbot.png}" alt="Chat with chatbot" />
+  <p>Chat with chatbot</p>
+</div>
+<div id="chatbot-popup" class="chat-popup">
+  <div class="chat-header">
+    <span>Chatbot</span>
+    <button id="close-chat">×</button>
+  </div>
+  <div class="chat-body" id="chat-body">
+    <p>Xin chào! Tôi có thể giúp gì cho bạn?</p>
+  </div>
+  <div class="chat-footer">
+    <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." />
+    <button id="send-message">Gửi</button>
+  </div>
+</div>
+</body>
+</html>

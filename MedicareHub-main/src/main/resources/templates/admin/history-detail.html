@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_admin">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Hub - Schedule</title>
+    <link rel="stylesheet" th:href="@{/css/historyDetail.css}" />
+    <script th:src="@{/js/update.js}"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <main class="content">
+        <h2 class="header-title">Lịch sử khám bệnh</h2>
+        <!-- Medical History Table -->
+        <div class="paid-header">
+            <div>
+                <span class="patient-name" th:text="${record.patient.user.fullName}"></span>
+                <span class="exam-time" th:text="|Ngày khám: ${#dates.format(record.examinationDate, 'dd/MM/yyyy')}|"></span>
+            </div>
+            <form th:action="@{/admin/history/updateStatus}" method="post" class="paid-status no-focus">
+                <!-- Gửi kèm recordId để biết được record cần cập nhật -->
+                <input type="hidden" name="recordId" th:value="${record.recordID}" />
+                <select name="paid" id="paidStatus" class="appointment-status">
+                    <option value="false" th:selected="${record.prescriptions.?[paid == false].size() > 0}">
+                        Chưa thanh toán
+                    </option>
+                    <option value="true" th:selected="${record.prescriptions.?[paid == false].size() == 0}">
+                        Hoàn thành
+                    </option>
+                </select>
+
+                <button type="submit" class="apply">Cập nhật</button>
+            </form>
+
+        </div>
+
+        <div class="details">
+            <div class="info-card">
+                <p><strong>Bác sĩ:</strong> <span th:text="${record.doctor.user.fullName}">Tên bác sĩ</span></p>
+                <p><strong>Chuyên khoa:</strong> <span th:text="${record.doctor.specialty.specialtyName}">Chuyên khoa</span></p>
+                <p><strong>Số điện thoại:</strong> <span th:text="${record.doctor.user.phoneNumber}">SĐT</span></p>
+                <p><strong>Email:</strong> <span th:text="${record.doctor.user.email}">Email</span></p>
+            </div>
+
+            <div class="info-card">
+                <p><strong>Phòng:</strong> <span th:text="${matchedSchedule != null ? matchedSchedule.room : 'Không xác định'}">Phòng khám</span></p>
+                <p><strong>Khoa:</strong> <span th:text="${record.doctor.specialty.specialtyName}">Khoa</span></p>
+                <p><strong>Triệu chứng:</strong> <span th:text="${record.symptoms}">Triệu chứng</span></p>
+                <p><strong class="diagnosis">Chuẩn đoán:</strong> <span class="danger" th:text="${record.diagnosis}">Chuẩn đoán</span></p>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Thuốc</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th>Tổng tiền</th>
+            </tr>
+            </thead>
+            <tbody th:with="totalPrescriptionAmount=${#aggregates.sum(record.prescriptions.![quantity * price])}">
+            <tr th:each="prescription : ${record.prescriptions}">
+                <td th:text="${prescription.medicineName}">Tên thuốc</td>
+                <td th:text="${prescription.quantity}">Số lượng</td>
+                <td th:text="${prescription.price}">Đơn giá</td>
+                <td th:text="${prescription.price*prescription.quantity}">Thành tiền</td>
+            </tr>
+            <!-- Tổng tiền các đơn thuốc; nếu cần tính toán trên server thì tính rồi truyền vào record -->
+            <tr class="total-row">
+                <td colspan="3"><strong class="total-label">Tổng tiền đơn thuốc</strong></td>
+                <td th:text="${totalPrescriptionAmount}">Tổng tiền</td>
+            </tr>
+            </tbody>
+        </table>
+
+</main>
+</div>
+</body>
+</html>

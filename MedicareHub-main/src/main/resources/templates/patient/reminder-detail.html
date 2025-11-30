@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_patient">
+<head>
+  <meta charset="UTF-8">
+  <title>Medical Hub - Reminder</title>
+  <link rel="stylesheet" th:href="@{/css/patientRecord.css}"/>
+  <script th:src="@{/js/notification.js}"></script>
+
+</head>
+<body>
+<div layout:fragment="content">
+  <section id="hero">
+    <main class="patient-record-container">
+      <div class="content-wrapper container">
+        <!-- Sidebar + Breadcrumb cùng 1 cột -->
+        <div class="sidebar">
+          <div class="breadcrumb">
+            <a th:href="@{/patient/home}">Trang chủ</a> >
+            <a th:href="@{/patient/appointment-list}">Phiếu khám bệnh</a>
+          </div>
+
+          <a th:href="@{/patient/create-report}">
+            <button class="btn-add-profile">
+              <i class="fa-solid fa-user-plus"></i> Thêm hồ sơ
+            </button>
+          </a>
+
+          <a th:href="@{/patient/report}">
+            <button class="btn-sidebar">
+              <i class="fa-solid fa-folder-open"></i> Hồ sơ bệnh nhân
+            </button>
+          </a>
+
+          <a th:href="@{/patient/appointment-list}">
+            <button class="btn-sidebar">
+              <i class="fa-solid fa-file-medical"></i> Phiếu khám bệnh
+            </button>
+          </a>
+
+          <a th:href="@{/patient/record}">
+            <button class="btn-sidebar">
+              <i class="fa-solid fa-calendar-days"></i> Lịch sử khám bệnh
+            </button>
+          </a>
+
+          <a th:href="@{/patient/reminder}">
+            <button class="btn-sidebar active">
+              <i class="fa-solid fa-bell"></i> Thông báo
+            </button>
+          </a>
+        </div>
+        <main class="patient-record-container">
+          <div class="record-wrapper">
+            <div class="patient-name-header" th:text="${#authentication.principal.fullName}"></div>
+            <div th:each="prescription, iterStat : ${medicalRecord.prescriptions}" class="records">
+              <div class="record-card">
+                <div class="record-info">
+                  <p><i class="fa-solid fa-calendar-days"></i> Ngày khám:
+                    <span th:text="${#dates.format(medicalRecord.examinationDate, 'dd/MM/yyyy')}"></span>
+                  </p>
+                  <p><i class="fa-solid fa-stethoscope"></i> Chẩn đoán:
+                    <span th:text="${medicalRecord.diagnosis}"></span>
+                  </p>
+                  <p><i class="fa-solid fa-pills"></i> Đơn thuốc:
+                    <span th:text="${prescription.medicineName}"></span>
+                  </p>
+                  <p><i class="fa-solid fa-receipt"></i> Số lượng:
+                    <span th:text="${prescription.quantity}"></span>
+                  </p>
+                  <p><i class="fa-solid fa-clock"></i> Liều lượng:
+                    <span th:text="${prescription.instruction}"></span>
+                  </p>
+                </div>
+                <button type="button"
+                        class="reminder-btn"
+                        th:attr="data-prescription-id=${prescription.prescriptionID}">
+                  <i class="fa-solid fa-bell" th:if="${prescription.reminder}"></i>
+                  <i class="fa-regular fa-bell" th:if="${!prescription.reminder}"></i>
+                </button>
+
+              </div>
+            </div>
+
+          </div>
+        </main>
+
+      </div>
+    </main>
+  </section>
+  <div id="reminder-popup" class="popup hidden">
+    <div class="popup-content">
+      <form th:action="@{/patient/reminder/notification}" method="post">
+        <input type="hidden" name="id" th:value="${medicalRecord.recordID}" />
+        <input type="hidden" name="prescriptionId" id="popup-prescription-id" />
+        <label for="reminderTime">
+          <h2>Thời gian nhắc uống thuốc:</h2></label>
+        <input type="datetime-local" id="reminderTime" name="reminderTime" required />
+        <div class="popup-actions">
+          <button type="submit" class="submit-btn">Lưu nhắc nhở</button>
+          <button type="button" class="cancel-btn" id="popup-cancel">Hủy</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

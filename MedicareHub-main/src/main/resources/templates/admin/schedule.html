@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_admin">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Hub - Schedule</title>
+    <link rel="stylesheet" th:href="@{/css/schedule.css}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script th:src="@{/js/newAdd.js}"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <main class="content">
+        <h2>Tạo ca trực mới</h2>
+        <!-- Search Bar -->
+        <form method="get" action="/admin/schedules" class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="fullName" th:value="${fullName}" placeholder="Tìm kiếm tài khoản">
+            <button class="find" type="submit">ÁP DỤNG</button>
+        </form>
+
+        <!-- Doctor List -->
+        <div class="doctor-list">
+            <th:block th:each="doctor : ${doctors}">
+                <div class="info-card"
+                     onclick="event.stopPropagation(); selectDoctor(this)"
+                     th:data-doctor-id="${doctor.doctorID}"
+                     th:data-doctor-name="${doctor.user.fullName}"
+                     th:data-specialty="${doctor.specialty?.specialtyName}">
+                    <p><strong>Bác sĩ:</strong> <span th:text="${doctor.user.fullName}"></span></p>
+                    <p><strong>Số điện thoại:</strong> <span th:text="${doctor.user.phoneNumber}"></span></p>
+                    <p><strong>Email:</strong> <span th:text="${doctor.user.email}"></span></p>
+                    <p><strong>Lịch trực:</strong>
+                        <span th:if="${doctorSchedules == null || doctorSchedules[doctor.doctorID] == null}">
+                            Chưa có lịch trực
+                        </span>
+                        <span th:if="${doctorSchedules != null and doctorSchedules[doctor.doctorID] != null}"
+                              th:each="schedule : ${doctorSchedules[doctor.doctorID]}">
+                        <span th:text="${#dates.format(schedule.startTime, 'dd/MM/yyyy HH:mm')}"></span> -
+                            <span th:text="${#dates.format(schedule.endTime, 'dd/MM/yyyy HH:mm')}"></span>
+                        </span>
+                    </p>
+                </div>
+            </th:block>
+        </div>
+
+        <!-- Pagination Container -->
+        <div class="pagination-container">
+            <span class="page-info">Page <span th:text="${page + 1}"></span> of <span th:text="${pages}"></span></span>
+
+            <ul class="pagination">
+                <!-- Nút 'Trang trước' -->
+                <li th:if="${page > 0}">
+                    <a th:href="@{/admin/schedules(page=${page - 1}, fullName=${fullName}, sortField=${sortField}, sortDir=${sortDir})}">
+                        <i class="fa-solid fa-angle-left"></i>
+                    </a>
+                </li>
+
+                <!-- Nút 'Trang sau' -->
+                <li th:if="${page < pages - 1}">
+                    <a th:href="@{/admin/schedules(page=${page + 1}, fullName=${fullName}, sortField=${sortField}, sortDir=${sortDir})}">
+                        <i class="fa-solid fa-angle-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Popup Form (Initially Hidden) -->
+        <div id="add" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="hideForm()">&times;</span>
+                <h2>Tạo ca trực</h2>
+
+                <form th:action="@{/admin/schedules/create}" method="post">
+                    <input type="hidden" id="doctorID" name="doctorID">
+                    <div th:if="${#fields.hasErrors('scheduleDTO.seatCount')}" class="error-message" th:errors="${scheduleDTO.seatCount}"></div>
+                    <div class="row">
+                        <div class="half-width">
+                            <label for="doctorName">Bác sĩ*</label>
+                            <input type="text" id="doctorName" name="doctorName" readonly>
+                        </div>
+
+                        <div class="half-width">
+                            <label for="seatCount">Số lượng chỗ*</label>
+                            <input type="number" id="seatCount" name="seatCount" th:value="${scheduleDTO.seatCount}">
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="half-width">
+                            <label for="service">Dịch vụ*</label>
+                            <input type="text" id="service" name="service" th:value="${scheduleDTO.service}">
+                        </div>
+
+                        <div class="half-width">
+                            <label for="room">Phòng*</label>
+                            <input type="text" id="room" name="room" th:value="${scheduleDTO.room}">
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="ideal-width">
+                            <div class="checkbox-container">
+                                <label><input type="checkbox" name="morning" class="checkboxes"> Buổi sáng</label>
+                                <label><input type="checkbox" name="afternoon" class="checkboxes"> Buổi chiều</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="calendar">
+                        <div th:if="${#fields.hasErrors('scheduleDTO.startDate')}" class="error-message" th:errors="${scheduleDTO.startDate}"></div>
+                        <h3>
+                            <span id="startDateSpan" style="cursor:pointer;">Ngày trực</span>
+                            <span id="endDateSpan" style="cursor:pointer;">Ngày kết thúc</span>
+                        </h3>
+                        <!-- Container cho ngày bắt đầu -->
+                        <div id="startDateContainer">
+                            <input type="date" id="startDate" name="startDate"
+                                   th:value="${doctorSchedules[doctorID] != null ? #dates.format(selectedSchedule[doctorID].startTime, 'yyyy-MM-dd') : #dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                        </div>
+                        <!-- Container cho ngày kết thúc, ban đầu ẩn -->
+                        <div id="endDateContainer" style="display:none;">
+                            <input type="date" id="endDate" name="endDate"
+                                   th:value="${doctorSchedules[doctorID] != null ? #dates.format(selectedSchedule[doctorID].endTime, 'yyyy-MM-dd') : #dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                        </div>
+                    </div>
+
+
+                    <div class="popup-buttons">
+                        <button id="cancelButton" class="cancel" type="button" onclick="hideForm()">HỦY</button>
+                        <button class="create" type="submit">TẠO</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

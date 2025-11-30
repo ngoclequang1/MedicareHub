@@ -1,0 +1,169 @@
+.main-content{
+    flex-grow: 1;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px
+}
+
+.content {
+    height: 610px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* Search Bar */
+/* Search Bar */
+.search-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+.search-container i {
+    margin: auto 8px;
+}
+.search-container input {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    font-size: 12px;
+    outline: none;
+}
+
+.search-container .find {
+    border: none;
+    background: none;
+    color: #00C58D;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border-left: 1px solid #ccc;
+}
+
+.search-container .find:hover {
+    color: #009970;
+}
+
+
+/* Filter Buttons */
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.btn {
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.completed,
+.pending {
+    text-decoration: none; /* Removes default underline */
+    color: inherit; /* Keeps the same text color */
+    font-weight: bold; /* Keeps the same bold effect */
+    display: inline-block;
+    background: none; /* Ensures no background color */
+    border-radius: 5px; /* Optional: for smooth design */
+}
+
+.completed:hover,
+.pending:hover {
+    opacity: 0.8; /* Slight opacity effect on hover */
+    cursor: pointer; /* Ensures it looks clickable */
+}
+
+.completed {
+    color: #2d55e7;
+}
+.pending {
+    color: red;
+}
+table tr {
+    border-bottom: 1px solid #000000;
+}
+
+table tr:last-child {
+    border-bottom: none;
+}
+
+table td {
+    padding: 15px;
+    font-size: 16px;
+}
+
+table td:first-child {
+    font-weight: semi-bold;
+}
+
+.status {
+    text-align: right;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.pagination-container {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 15px;
+}
+
+.page-info {
+    font-size: 14px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination a {
+    text-decoration: none;
+    padding: 5px 8px;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    color: #333;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #2b81ae;
+    color: white;
+}

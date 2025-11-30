@@ -1,0 +1,146 @@
+.main-content{
+    flex-grow: 1;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px
+}
+
+.content {
+    height: 520px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+.content h2 {
+    margin-top: 20px; /* Tạo khoảng cách giữa h2 và container */
+}
+
+.container {
+    height: 520px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+.info-container {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+.avatar {
+    width: 250px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1px solid rgba(204, 204, 204, 0.78);
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+}
+
+.info ul {
+    list-style: none;
+    columns: 2;
+    column-gap: 20px;
+    padding: 0;
+    margin: 0;
+
+}
+
+.info li {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 18px;
+    font-size: 16px;
+    color: #333;
+    line-height: 1.6;
+}
+
+.info i {
+    color: #4c00ff;
+    font-size: 20px;
+    min-width: 25px;
+    text-align: center;
+    padding-top: 2px;
+}
+
+.info input {
+    padding: 5px;
+    border: 1px solid rgba(204, 204, 204, 0);
+    outline: none;
+    font-weight: 500;
+    color: #333;
+    min-width: 120px;
+    display: inline-block;
+    font-size: 16px;
+}
+.info select {
+    padding: 5px;
+    border: 1px solid rgba(204, 204, 204, 0);
+    outline: none;
+    font-weight: 500;
+    color: #333;
+    min-width: 120px;
+    display: inline-block;
+    font-size: 16px;
+}
+.text-purple {
+    color: #4c00ff;
+    font-weight: 600;
+}
+
+.btn {
+    align-self: flex-end;
+}
+.btn-save {
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 20px;
+}
+
+.btn-save:hover {
+    background-color: #0056b3;
+}
+
+.btn-cancel {
+    background-color: #ed0909;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 20px;
+}
+
+.btn-cancel:hover {
+    background-color: #bc3434;
+}
+

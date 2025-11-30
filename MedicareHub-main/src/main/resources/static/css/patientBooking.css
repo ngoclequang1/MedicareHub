@@ -1,0 +1,210 @@
+/* BOOKING SECTION */
+.booking-section {
+    background-color: #fff;
+    width: 100%;
+    padding: 40px 0;
+}
+
+.booking-header {
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.breadcrumb {
+    font-size: 16px;
+    color: #122853;
+}
+
+.breadcrumb a {
+    color: #122853;
+    font-weight: 500;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.btn-add-profile {
+    background-color: #4c00ff;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-add-profile:hover {
+    background-color: #3b00cc;
+}
+
+/* PATIENT CARD */
+.patient-card {
+    background-color: #e6ebff;
+    padding: 30px;
+    border-radius: 16px;
+    max-width: 900px;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.patient-card h3 {
+    font-size: 28px;
+    color: #122853;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.patient-info {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 25px;
+}
+
+.patient-info ul {
+    width: 100%;
+}
+
+.patient-info li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    font-size: 16px;
+}
+
+.patient-info li i {
+    color: #4c00ff;
+    width: 24px;
+    min-width: 24px;
+    margin-right: 12px;
+}
+
+.patient-info li span {
+    font-weight: 600;
+    min-width: 120px; /* Giúp các label thẳng hàng */
+    display: inline-block;
+    color: #333;
+}
+
+.action-btns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.left-actions {
+    display: flex;
+    gap: 30px;
+}
+
+.left-actions button,
+.left-actions a {
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s;
+}
+
+.left-actions button i,
+.left-actions a i {
+    margin-right: 8px;
+}
+
+.left-actions button:hover,
+.left-actions a:hover {
+    color: #4c00ff;
+}
+
+.next-btn {
+    background-color: #4c00ff;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;  /* Tạo khoảng cách icon và chữ */
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.next-btn:hover {
+    background-color: #3b00cc;
+}
+
+.no-record {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.no-record img {
+    width: 250px; /* Tăng kích thước hình */
+    margin-bottom: 20px;
+}
+
+.no-record p {
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    color: #333;
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 400px;
+    text-align: center;
+}
+
+.popup-content h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.popup-content p {
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.popup-actions {
+    display: flex;
+    justify-content: space-around;
+}
+
+.popup-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #4c00ff;   /* Màu xanh đồng bộ */
+    color: #fff;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.popup-actions button:hover {
+    background-color: #3b00cc;   /* Hover đậm hơn */
+}

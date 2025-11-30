@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_clinic">
+<head>
+  <meta charset="UTF-8">
+  <title>Medical Hub - Doctor</title>
+  <link rel="stylesheet" th:href="@{/css/patientList.css}" />
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Lấy giá trị tham số "ongoingexamination" từ URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const ongoing = urlParams.get('ongoingexamination');
+
+      // Lấy tất cả các thẻ <a> trong phần chứa tabs
+      const tabs = document.querySelectorAll('.tabs a');
+
+      // Duyệt qua các tab và thêm hoặc bỏ class 'active' tùy thuộc vào tham số
+      tabs.forEach(function(tab) {
+        if (ongoing === 'true' && tab.href.includes("ongoingexamination=true")) {
+          tab.classList.add('active');
+        } else if ((ongoing === 'false' || ongoing === null) && tab.href.includes("ongoingexamination=false")) {
+          tab.classList.add('active');
+        } else {
+          tab.classList.remove('active');
+        }
+      });
+    });
+
+  </script>
+</head>
+<body>
+<div layout:fragment="content">
+  <h2>Danh sách bệnh nhân</h2>
+  <div class="tabs">
+    <a th:href="@{/doctor/patient-list(ongoingexamination=false, patientName=${param.patientName})}"
+       class="tab active" >Tiếp nhận</a>
+    <a th:href="@{/doctor/patient-list(ongoingexamination=true, patientName=${param.patientName})}"
+       class="tab">Đang khám</a>
+  </div>
+  <div class="search-bar">
+    <form th:action="@{/doctor/patient-list}" method="get">
+      <input type="hidden" name="ongoingexamination" th:value="${param.ongoingexamination}" />
+      <input type="text" name="patientName" placeholder="Tìm kiếm theo tên bệnh nhân" th:value="${param.patientName}" />
+      <button type="submit" hidden="hidden">Tìm kiếm</button>
+    </form>
+  </div>
+  <div id="no-results" class="no-results" th:if="${#lists.isEmpty(appointmentPage.content)}">
+    <p>Không tìm thấy bệnh nhân</p>
+  </div>
+  <table class="patient-table" id="patient-table" th:if="${!#lists.isEmpty(appointmentPage.content)}">
+    <thead>
+    <tr>
+      <th>STT</th>
+      <th>Mã bệnh nhân</th>
+      <th>Họ và tên</th>
+      <th>Ngày sinh</th>
+      <th>Giới Tính</th>
+      <th>Tùy chọn</th>
+    </tr>
+    </thead>
+    <tbody id="patient-table-body">
+    <tr th:each="appointment, iterStat : ${appointmentPage.content}">
+      <td th:text="${iterStat.index + 1}"></td>
+      <!-- Giả sử patientCode là thuộc tính của patient -->
+      <td th:text="${appointment.patient.patientCode}"></td>
+      <td th:text="${appointment.patient.user.fullName}"></td>
+      <td th:text="${#dates.format(appointment.patient.dob, 'dd/MM/yyyy')}"></td>
+      <td th:text="${appointment.patient.user.gender}"></td>
+      <td>
+        <form th:action="@{/doctor/services/create-record}" method="get">
+          <!-- Pass the patientId as a parameter -->
+          <input type="hidden" name="patientId" th:value="${appointment.patient.patientID}" />
+          <input type="hidden" name="appointmentId" th:value="${appointment.appointmentID}" /> <!-- Pass the appointment ID if needed -->
+          <button type="submit" class="action-btn">
+            →
+          </button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <!-- Phân trang -->
+  <div class="pagination" id="pagination" th:if="${appointmentPage.totalPages > 1}">
+    <button class="page-btn" th:disabled="${appointmentPage.first}"
+            th:onclick="|window.location.href='@{/doctor/patient-list(page=${appointmentPage.number - 1},ongoingexamination=${param.ongoingexamination},patientName=${param.patientName})}'|">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <span th:each="pageNum : ${#numbers.sequence(0, appointmentPage.totalPages - 1)}">
+      <button class="page-btn"
+              th:classappend="${pageNum == appointmentPage.number} ? ' active'"
+              th:onclick="|window.location.href='@{/doctor/patient-list(page=${pageNum},ongoingexamination=${param.ongoingexamination},patientName=${param.patientName})}'|"
+              th:text="${pageNum + 1}">
+      </button>
+    </span>
+    <button class="page-btn" th:disabled="${appointmentPage.last}"
+            th:onclick="|window.location.href='@{/doctor/patient-list(page=${appointmentPage.number + 1},ongoingexamination=${param.ongoingexamination},patientName=${param.patientName})}'|">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+</div>
+</div>
+</body>
+</html>

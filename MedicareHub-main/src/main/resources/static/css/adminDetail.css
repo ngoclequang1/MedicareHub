@@ -1,0 +1,85 @@
+.content {
+    height: 520px;
+    padding: 20px;
+    overflow-y: auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.main-content{
+    flex-grow: 1;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px
+}
+.section-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Table */
+.user-info {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.user-info th,
+.user-info td {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.user-info th {
+    text-align: left;
+    background-color: #f8f9fa;
+}
+
+.user-info td {
+    font-weight: bold;
+}
+
+.user-info input {
+    width: 600px;
+    padding: 5px;
+    border: 1px solid rgba(204, 204, 204, 0);
+    outline: none;
+    font-weight: bolder;
+    color: #000000;
+    min-width: 120px;
+    display: inline-block;
+    font-size: 16px;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.status {
+    font-weight: bold;
+    width: 180px;
+}
+
+.status-dot {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.status-dot.active {
+    color: #00C58D;
+}
+
+.status-dot.inactive {
+    color: #bc3434;
+}
+.update-btn {
+    padding: 7px 12px;
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.update-btn:hover {
+    background-color: darkred;
+}

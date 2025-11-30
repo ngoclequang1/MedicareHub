@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_patient">
+<head>
+  <meta charset="UTF-8">
+  <title>Medical Hub - Report</title>
+  <link rel="stylesheet" th:href="@{/css/patientReport.css}"/>
+  <script th:src="@{/js/patientReport.js}"></script>
+</head>
+<body>
+<div layout:fragment="content">
+  <section id="hero">
+    <main class="patient-record-container">
+      <div class="content-wrapper container">
+        <!-- Sidebar + Breadcrumb cùng 1 cột -->
+        <div class="sidebar">
+          <div class="breadcrumb">
+            <a th:href="@{/patient/home}">Trang chủ</a> >
+            <a th:href="@{/patient/report}">Hồ sơ bệnh nhân</a>
+          </div>
+
+          <a th:href="@{/patient/create-report}">
+            <button class="btn-add-profile">
+              <i class="fa-solid fa-user-plus"></i> Thêm hồ sơ
+            </button>
+          </a>
+
+          <a th:href="@{/patient/report}">
+            <button class="btn-sidebar active">
+              <i class="fa-solid fa-folder-open"></i> Hồ sơ bệnh nhân
+            </button>
+          </a>
+
+          <a th:href="@{/patient/appointment-list}">
+            <button class="btn-sidebar">
+              <i class="fa-solid fa-file-medical"></i> Phiếu khám bệnh
+            </button>
+          </a>
+
+          <a th:href="@{/patient/record}">
+            <button class="btn-sidebar">
+              <i class="fa-solid fa-calendar-days"></i> Lịch sử khám bệnh
+            </button>
+          </a>
+
+          <a th:href="@{/patient/reminder}">
+            <button class="btn-sidebar">
+              <i class="fa-solid fa-bell"></i> Thông báo
+            </button>
+          </a>
+        </div>
+
+        <div class="patient-content">
+          <h2>Hồ sơ bệnh nhân</h2>
+          <!-- Nếu patient tồn tại thì hiển thị profile card -->
+          <div th:if="${patient != null and !patient.deleted}" class="profile-card">
+            <div class="profile-item">
+              <i class="fa-solid fa-user"></i>
+              <span class="label">Họ và tên:</span>
+              <span class="highlight infor" th:text="${#authentication.principal.fullName}"></span>
+            </div>
+
+            <div class="profile-item">
+              <i class="fa-solid fa-calendar"></i>
+              <span class="label">Ngày sinh:</span>
+              <span class="infor" th:text="${#dates.format(patient?.dob, 'dd/MM/yyyy')}"></span>
+            </div>
+            <div class="profile-item">
+              <i class="fa-solid fa-phone"></i>
+              <span class="label">Số điện thoại:</span>
+              <span class="infor" th:text="${patient?.user?.phoneNumber}"></span>
+            </div>
+            <div class="profile-item">
+              <i class="fa-solid fa-venus-mars"></i>
+              <span class="label">Giới tính:</span>
+              <span class="infor" th:text="${patient?.user?.gender}"></span>
+            </div>
+            <div class="profile-item">
+              <i class="fa-solid fa-location-dot"></i>
+              <span class="label">Địa chỉ: </span>
+              <span class="infor" th:text="${patient?.address}"></span>
+            </div>
+            <div class="profile-item">
+              <i class="fa-solid fa-globe"></i>
+              <span class="label">Dân tộc:</span>
+              <span class="infor" th:text="${patient?.ethnicity}"></span>
+            </div>
+            <div class="profile-actions">
+              <button type="button"
+                      class="delete-btn button"
+                      th:attr="data-id=${patient.patientID}">
+                <i class="fa-solid fa-trash"></i> Xóa hồ sơ
+              </button>
+              <a th:href="@{/patient/update-report}" class="edit-btn button"><i class="fa-solid fa-pen"></i> Chỉnh sửa</a>
+              <button type="button" class="detail-btn button">
+                <i class="fa-solid fa-circle-info"></i> Chi tiết
+              </button>
+            </div>
+          </div>
+
+          <div th:unless="${patient != null and !patient.deleted}" class="no-record">
+            <img th:src="@{/images/no-record.png}" alt="No record" />
+            <p>Không có hồ sơ bệnh nhân nào</p>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- Popup Xóa Hồ Sơ -->
+    <div class="popup-overlay" id="deletePopup" style="display: none;">
+      <div class="popup-content">
+        <span class="close-popup" id="closeDelete">&times;</span>
+        <h2>Xác nhận</h2>
+        <p>Bạn muốn xóa hồ sơ này chứ?</p>
+        <div class="popup-actions">
+          <button class="cancel-btn">Không, đừng xóa.</button>
+          <!-- Nút xác nhận xóa -->
+          <button class="confirm-btn">Có, hãy xóa đi.</button>
+        </div>
+      </div>
+    </div>
+    <div class="detail-popup" id="detailPopup" style="display: none;">
+      <div class="detail-content">
+        <span class="detail-close" id="closeDetail">&times;</span>
+        <h3><span class="highlight">Hồ sơ</span> bệnh nhân</h3>
+        <ul>
+          <li>
+            <i class="fa-solid fa-user"></i>
+            Họ và tên: <span class="text-purple" th:text="${#authentication.principal.fullName}">...</span>
+          </li>
+          <li>
+            <i class="fa-solid fa-calendar-days"></i>
+            Ngày sinh: <span th:text="${#dates.format(patient?.dob, 'dd/MM/yyyy')}"></span>
+          </li>
+          <li>
+            <i class="fa-solid fa-phone"></i>
+            Số điện thoại: <span th:text="${patient?.user?.phoneNumber}"></span>
+          </li>
+          <li>
+            <i class="fa-solid fa-venus-mars"></i>
+            Giới tính: <span th:text="${patient?.user?.gender}"></span>
+          </li>
+          <li>
+            <i class="fa-solid fa-location-dot"></i>
+            Địa chỉ: <span th:text="${patient?.address}"></span>
+          </li>
+          <li>
+            <i class="fa-solid fa-globe"></i>
+            Dân tộc: <span th:text="${patient?.ethnicity}"></span>
+          </li>
+          <li>
+            <i class="fa-solid fa-id-card"></i>
+            CCCD: <span th:text="${patient?.user?.identityNumber}"></span>
+          </li>
+          <li>
+            <i class="fa-solid fa-hashtag"></i>
+            Mã bệnh nhân: <span th:text="${patient?.patientCode}"></span>
+          </li>
+          <li>
+            <i class="fa-solid fa-envelope"></i>
+            Email: <span th:text="${patient?.user?.email}"></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_admin">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Hub - Doctor List</title>
+    <link rel="stylesheet" th:href="@{/css/doctorList.css}" />
+</head>
+<body>
+<div layout:fragment="content">
+    <main class="content">
+        <div class="top-header" >
+            <h2>Danh sách bệnh nhân</h2>
+<!--            <button onclick="openAddModal()">+THÊM</button>-->
+        </div>
+
+
+        <!-- Search Bar and Filters -->
+        <form method="get" action="/admin/patients" class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="fullName" th:value="${fullName}" placeholder="Tìm kiếm tài khoản">
+            <button class="find" type="submit">ÁP DỤNG</button>
+        </form>
+
+        <!-- Filter Buttons -->
+        <div class="filter-buttons">
+            <a class="btn blue" th:href="@{/admin/patients(fullName=${fullName}, sortField='role', sortDir='asc')}">Bệnh nhân</a>
+            <a class="btn orange" th:href="@{/admin/patients(fullName=${fullName}, enabled=true,  sortField='enabled', sortDir='desc')}">Còn hoạt động</a>
+        </div>
+
+        <!-- Sorting Dropdowns -->
+        <div class="sorting-options">
+            <a class="sort-btn"
+               th:href="@{/admin/patients(fullName=${fullName}, sortField='fullName', sortDir=${sortField=='fullName' and sortDir=='asc' ? 'desc' : asc})}">
+                HỌ TÊN
+                <i class="fa-solid fa-angle-down"
+                   th:classappend="${sortField=='fullName' and sortDir=='desc'} ? ' rotate' : ''"></i>
+            </a>
+            <a class="sort-btn"
+               th:href="@{/admin/patients(fullName=${fullName}, sortField='enabled', sortDir=${sortField=='enabled' and sortDir=='desc' ? 'asc' : 'desc'})}">
+                TRẠNG THÁI
+                <i class="fa-solid fa-angle-down"
+                   th:classappend="${sortField=='enabled' and sortDir=='desc'} ? ' rotate' : ''"></i>
+            </a>
+        </div>
+
+
+
+        <!-- Table -->
+
+        <table>
+            <thead>
+            <tr>
+                <th class="full-name">Họ tên</th>
+                <th class="phone-number">Số điện thoại</th>
+                <th class="role-name">Vai trò</th>
+                <th class="status">Trạng thái</th>
+                <th class="option-column">Tùy chọn</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="patient : ${patients}">
+                <td class="full-name" th:text="${patient.user.fullName}">Nguyễn Văn A</td>
+                <td class="phone-number" th:text="${patient.user.phoneNumber}">0987462513</td>
+                <td class="role-name" th:text="${patient.user.roleID.roleName == 'ROLE_PATIENT' ? 'Bệnh nhân' : patient.user.roleID.roleName}"></td>
+                <td>
+                    <span class="status-dot" th:classappend="${patient.user.enabled} ? 'active' : 'inactive'">●</span>
+                    <span th:text="${patient.user.enabled} ? ' Còn hoạt động' : ' Không hoạt động'"></span>
+                </td>
+
+                <td class="option-column">
+                    <div class="option-content">
+                        <a th:href="@{/admin/patients/detail/{id}(id=${patient.patientID})}">
+                            <i class="fa-solid fa-circle-info" style="color: black"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Pagination Container -->
+        <div class="pagination-container">
+            <span class="page-info">Page <span th:text="${page + 1}"></span> of <span th:text="${pages}"></span></span>
+
+            <ul class="pagination">
+                <!-- Nút 'Trang trước' -->
+                <li th:if="${page > 0}">
+                    <a th:href="@{/admin/patients(page=${page - 1}, fullName=${fullName}, enabled=${enabled}, sortField=${sortField}, sortDir=${sortDir})}">
+                        <i class="fa-solid fa-angle-left"></i>
+                    </a>
+                </li>
+
+                <!-- Nút 'Trang sau' -->
+                <li th:if="${page < pages - 1}">
+                    <a th:href="@{/admin/patients(page=${page + 1}, fullName=${fullName}, enabled=${enabled}, sortField=${sortField}, sortDir=${sortDir})}">
+                        <i class="fa-solid fa-angle-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+
+    </main>
+</div>
+</body>
+</html>

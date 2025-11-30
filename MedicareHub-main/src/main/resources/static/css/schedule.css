@@ -1,0 +1,386 @@
+
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px;
+}
+.content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: white;
+    height: 620px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    position: relative;
+}
+
+/* Search Bar */
+.search-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+.search-container i {
+    margin: auto 8px;
+}
+.search-container input {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    font-size: 12px;
+    outline: none;
+}
+
+.search-container .find {
+    border: none;
+    background: none;
+    color: #00C58D;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border-left: 1px solid #ccc;
+}
+
+.search-container .find:hover {
+    color: #009970;
+}
+/* Content */
+.content {
+    flex: 1;
+    padding: 20px;
+}
+
+h2 {
+    font-size: 28px;
+    margin-bottom: 14px;
+}
+
+/* Doctor List */
+.doctor-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.info-card {
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.info-card p {
+    font-size: 20px;
+    margin: 4px 0;
+}
+
+.info-card strong {
+    font-weight: bold;
+}
+.info-card:hover {
+    transform: scale(1.0002);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.error-message {
+    font-size: 8px; /* Kích thước chữ nhỏ */
+    color: #ff0000; /* Màu chữ đỏ */
+    margin-top: -15px; /* Khoảng cách trên nhỏ để sát với input */
+    margin-bottom: 5px;
+    /* Khoảng cách dưới để không dính vào input tiếp theo */
+    display: block; /* Đảm bảo hiển thị dưới dạng block để xuống dòng */
+    text-align: left;
+}
+
+
+/* Checkbox Container */
+.checkbox-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}
+.checkbox-container label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.checkboxes {
+    display: inline-flex;
+    align-items: center;
+    width: 15px;
+}
+/* Calendar Section */
+.calendar {
+    display: flex;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center; /* Căn giữa theo chiều dọc (nếu cần) */
+    flex-direction: column;
+    margin: 10px 0;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Calendar Header */
+.calendar h3 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 35px;
+}
+
+.calendar h3 span {
+    opacity: 0.5;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.calendar h3 span.active {
+    opacity: 1;
+    font-weight: bold;
+}
+
+.calendar h3 span.disabled {
+    opacity: 0.3;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Buttons Section */
+.popup-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Cancel Button */
+.popup-buttons .cancel {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Create Button */
+.popup-buttons .create {
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Close Button */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/* Date Picker Input */
+.date-input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+
+/* Căn chỉnh lịch Flatpickr */
+.flatpickr-calendar {
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: Roboto, sans-serif;
+}
+
+/* Tiêu đề tháng */
+.flatpickr-months {
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    font-weight: bold;
+}
+
+/* Ngày trong lịch */
+.flatpickr-day {
+    border-radius: 5px;
+    transition: 0.2s;
+}
+
+.flatpickr-day.selected {
+    background: #3b5998 !important;
+    color: white !important;
+}
+
+/* Ngày bị disable */
+.flatpickr-day.disabled {
+    color: #bbb !important;
+}
+
+/* Thanh chuyển tháng */
+.flatpickr-prev-month, .flatpickr-next-month {
+    color: #333;
+    font-size: 16px;
+}
+
+/* Tuần trong lịch */
+.flatpickr-weekdays {
+    background: #f8f8f8;
+    font-weight: bold;
+}
+
+/* Hover khi chọn ngày */
+.flatpickr-day:hover {
+    background: #eee;
+    color: #333;
+}
+
+.pagination-container {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 15px;
+}
+
+.page-info {
+    font-size: 14px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination a {
+    text-decoration: none;
+    padding: 5px 8px;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    color: #333;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #2b81ae;
+    color: white;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    width: 420px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.required-note {
+    font-size: 14px;
+}
+.close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+.form-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Input Fields */
+input, select {
+    height: 40px;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+label {
+    margin-bottom: -20px;
+}
+
+/* Full Width Inputs */
+.full-width {
+    width: calc(100% - 2px);
+    margin-bottom: 12px;
+}
+
+/* Row Layout */
+.row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.ideal-width {
+    width: 100%;
+    max-width: 398px;
+    margin-bottom: 12px;
+}
+
+.half-width {
+    width: calc(50% - 6px);
+}
+
+/* Date Input */
+.date-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.date-container input {
+    width: 100%;
+    padding-right: 30px;
+}
+

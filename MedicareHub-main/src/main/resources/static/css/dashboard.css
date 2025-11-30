@@ -1,0 +1,222 @@
+.main-content {
+    flex-grow: 1;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px; /* Increase gap between elements */
+}
+/* Expand chart and table container */
+
+
+/* Dashboard Title */
+h2 {
+    font-size: 24px;
+    color: #021D46;
+    margin-bottom: 20px;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 3fr 1.5fr;
+    gap: 20px;
+}
+
+/* Left Section: Statistics */
+.statistics-container {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    min-height: 65vh;
+}
+
+/* Right Panel: chứa các phần theo dạng cột */
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Cả 2 phần này sử dụng toàn bộ chiều rộng của cột right-panel */
+.top-departments,
+.total-patients {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Top Departments */
+.top-departments {
+    background: #ffffff;
+    padding: 20px;
+    min-height: 40vh;
+    display: flex;
+    border-radius: 10px;
+    flex-direction: column;
+}
+/* Total Patients */
+.total-patients {
+    background: linear-gradient(30deg, rgba(54, 199, 255, 0.2), #34aaeb);
+    padding: 15px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.patient-info {
+    margin-right: 80px;
+}
+.patient-icon img {
+    width: 70px;
+    color: white;
+}
+
+.patient-label {
+    font-size: 14px;
+    color: #9A9A9A;
+    font-weight: bold;
+}
+
+.patient-count {
+    font-size: 30px;
+    color: black;
+    font-weight: bold;
+    text-align: left;
+}
+
+.doctor-name {
+    font-size: 14px;
+    color: gray;
+    margin-top: 3px;
+}
+
+/* Date Filters */
+.date-filters {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.date-filter {
+    display: flex;
+    flex-direction: column;
+}
+
+.date-filter label {
+    margin-bottom: -10px;
+    margin-left: 10px;
+    font-weight: bold;
+    z-index: 1;
+    background-color: white;
+    border-radius: 20px;
+    width: fit-content;
+    font-size: 14px;
+}
+
+.date-filter input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 20px;
+}
+
+/* Chart Box */
+.chart-box {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chart-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.chart-header img {
+    width: 24px;
+    height: 24px;
+}
+
+/* Right Panel */
+.right-panel {
+    flex: 1.5; /* Increase slightly */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Top Departments Section - More Space */
+
+
+
+.top-header {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+}
+.top-header img {
+    width: 30px;
+}
+#top-header{
+    display: flex;
+    align-items: center;
+}
+.department-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.department-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.department-list li {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+}
+
+/* Phần bên trái */
+.department-list li .left {
+    flex: 1;
+    text-align: left;
+}
+
+/* Phần giữa */
+.department-list li .middle {
+    text-align: right;
+    padding-right: 20px;
+}
+.department-list li .middle .count {
+    color: #1FC65C;
+    font-weight: bolder;
+}
+
+/* Phần bên phải */
+.department-list li .right {
+    flex: 0 0 auto;
+    min-width: 50px;
+    background-color: #D9D9D9;
+    height: 30px;
+    display: inline-block;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 8px;
+}
+

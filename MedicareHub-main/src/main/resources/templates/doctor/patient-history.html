@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/_clinic">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Hub - Doctor</title>
+    <link rel="stylesheet" th:href="@{/css/patientHistory.css}" />
+    <script th:src="@{/js/createRecord.js}"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="content-wrapper">
+    <div class="patient-info">
+        <h2 class="back-link">
+            <a href="javascript:history.back()">Quay lại</a>
+        </h2>
+        <h3 id="patient-id" th:text="${patient.patientCode}">BN2AF85</h3>
+        <p id="confirmation-time">
+            Xác nhận lúc:
+            <span th:text="${ #dates.format(record.examinationDate, 'dd/MM/yyyy - HH:mm:ss')}">18/6/2024 - 07:44:12</span>
+        </p>
+
+        <div class="patient-data">
+            <p>
+                <i class="fas fa-user"></i>
+                <!-- Thêm icon FontAwesome -->
+                <strong id="patient-name" th:text="${patient.user.fullName}">Hà Xuân Mai</strong>
+            </p>
+            <p id="patient-gender" th:text="${ patient.user.gender}">Giới tính: Nữ</p>
+            <p id="patient-dob">Ngày sinh: <span>&nbsp;</span><span th:text="${#dates.format(patient.dob, 'dd/MM/yyyy')}"></span></p>
+            <p >Địa chỉ: <span>&nbsp;</span> <span th:text="${patient.address}">Hà Nội</span></p>
+            <p>Số điện thoại: <span>&nbsp;</span><span th:text="${patient.user.phoneNumber}"> 0989125050</span></p>
+            <p>Bác sĩ : <span>&nbsp;</span><span th:text="${record.doctor.user.fullName}"> 0989125050</span></p>
+            <p>Ngày khám: <span>&nbsp;</span><span th:text="${#dates.format(record.examinationDate, 'dd/MM/yyyy')}"></span></p>
+            <p>Chuyên khoa: <span>&nbsp;</span><span th:text="${record.doctor.specialty.specialtyName}">Nội</span></p>
+        </div>
+    </div>
+
+    <div class="medical-record-form">
+
+        <h2>Xem lịch sử khám bệnh</h2>
+        <div class="header-section">
+            <div class="re-examination"
+                 th:text="${record.reExamination} ? 'Tái khám: có' : 'Tái khám: không có'">
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label>Triệu chứng</label>
+            <p class="info-text" th:text="${record.symptoms}">Triệu chứng mặc định</p>
+        </div>
+        <div class="form-group">
+            <label>Chẩn đoán</label>
+            <p class="info-text" th:text="${record.diagnosis}">Chẩn đoán mặc định</p>
+        </div>
+
+        <!-- Phần xem xét nghiệm đã làmlàm -->
+        <div class="form-group expandable-section">
+            <div class="section-header" onclick="toggleSection('test-section')">
+                <label>Xét nghiệm đã thực hiện<i class="fas fa-chevron-right section-icon"></i></label>
+            </div>
+            <div class="section-content" id="test-section" style="display: none">
+                <table class="test-table">
+                    <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên dịch vụ</th>
+                        <th>Chỉ định thực hiện</th>
+                        <th>Tùy chọn</th>
+                    </tr>
+                    </thead>
+                    <tbody id="test-table-body">
+                        <tr th:each="test, iterStat : ${record.tests}">
+                            <td th:text="${iterStat.index + 1}">1</td>
+                            <td th:text="${test.serviceName}">Tên dịch vụ</td>
+                            <td th:text="${test.instruction}">Chỉ định</td>
+                            <td>
+                                <button class="action-btn">
+                                    <i class="fas fa-upload"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Phần Xem đơn thuốc mới thêm -->
+        <div class="form-group expandable-section">
+            <div class="section-header" onclick="toggleSection('prescription-section')">
+                <label>Xem đơn thuốc<i class="fas fa-chevron-right section-icon"></i></label>
+            </div>
+            <div class="section-content" id="prescription-section" style="display: none">
+                <table class="prescription-table">
+                    <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên thuốc</th>
+                        <th>Chỉ định sử dụng</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                    </tr>
+                    </thead>
+                    <tbody id="prescription-table-body">
+                        <tr th:each="prescription, iterStat : ${record.prescriptions}">
+                            <td th:text="${iterStat.index + 1}">1</td>
+                            <td th:text="${prescription.medicineName}">Tên thuốc</td>
+                            <td th:text="${prescription.instruction}">Chỉ định sử dụng</td>
+                            <td th:text="${prescription.quantity}">Số lượng</td>
+                            <td th:text="${prescription.price}">Đơn giá</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="form-buttons">
+            <a id ='completeButton' class="btn-complete" href="javascript:history.back()" style="text-decoration: none">Hoàn thành xem</a>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>

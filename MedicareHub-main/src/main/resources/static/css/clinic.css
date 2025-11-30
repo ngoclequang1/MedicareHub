@@ -1,0 +1,300 @@
+/* Reset mặc định */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: #f8f9fa;
+    overflow-y: auto;
+    z-index: 1000;
+    display: flex; /* Biến sidebar thành flex container */
+    flex-direction: column; /* Sắp xếp các phần tử theo chiều dọc */
+}
+
+/* Đảm bảo logo và menu ở trên */
+.logo {
+    padding: 20px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.menu {
+    flex-grow: 1;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+.logo-text {
+    color: #4a00e0;
+}
+.logo {
+    color: #122853;
+    font-weight: 700;
+    font-size: 1.4rem;
+    text-decoration: none;
+}
+
+.logo span {
+    background-color: #014dd5;
+    color: #ffff;
+    padding: 0px 5px;
+    border-radius: 5px;
+    font-weight: 600;
+    margin-right: 5px;
+}
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: #000;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.menu-item.page {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.fas.fa-user-md {
+    font-size: 25px;
+}
+
+.menu-item.calendar {
+    background-color: #f0eaff;
+    color: #4a00e0;
+}
+
+.menu-item .icon {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.icon.schedule {
+    color: rgb(0, 0, 0);
+}
+
+.user-info {
+    padding-bottom: 0; /* Đẩy user-info xuống dưới cùng */
+    padding: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.avatar-container {
+    width: 50px;
+    height: 50px;
+}
+
+.avatar-container .avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-details .role {
+    font-size: 14px;
+    color: #999;
+    margin-bottom: 2px;
+}
+
+.user-details .name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+}
+
+.logout {
+    display: flex;
+    align-items: center;
+    color: #ff0000;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding-left: 30px;
+}
+
+.logout .logout-icon i {
+    margin-right: 10px;
+    font-size: 18px;
+    color: #ff0000;
+}
+
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    padding: 30px;
+    background-color: #f5f5f5;
+    margin-left: 250px; /* Khoảng cách bên trái bằng chiều rộng của sidebar */
+    height: 100vh; /* Chiều cao bằng 100% viewport height */
+    overflow-y: auto; /* Cho phép cuộn dọc */
+    padding: 20px; /* Khoảng cách bên trong (tùy chỉnh nếu cần) */
+    box-sizing: border-box;
+}
+
+.main-content h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.main-content h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.tab {
+    padding: 10px 20px;
+    background-color: #f0f0f0; /* Nền xám nhạt cho tab không active */
+    color: #666;
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.tab.active {
+    background-color: #f0eaff; /* Nền tím nhạt cho tab active */
+    color: #4a00e0; /* Chữ tím đậm */
+}
+
+.search-bar {
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    font-size: 14px;
+    background-color: #f0f0f0; /* Nền xám nhạt */
+    color: #333;
+}
+
+.search-bar input::placeholder {
+    color: #999;
+}
+
+/* Bảng bệnh nhân */
+.patient-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.patient-table th,
+.patient-table td {
+    padding: 15px;
+    text-align: left;
+    font-size: 14px;
+    color: #333;
+}
+
+.patient-table th {
+    background-color: #f0f0f0; /* Nền xám nhạt cho tiêu đề bảng */
+    font-weight: 600;
+}
+
+.patient-table td {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.patient-table tr:last-child td {
+    border-bottom: none;
+}
+
+.action-btn {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: #666;
+}
+
+.action-btn:hover {
+    background-color: #f0eaff;
+    color: #4a00e0;
+}
+
+/* Phân trang */
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.page-btn {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+}
+
+.page-btn.active {
+    background-color: #f0eaff; /* Nền tím nhạt cho trang active */
+    color: #4a00e0; /* Chữ tím đậm */
+    border-color: #4a00e0;
+}
+
+.page-btn:hover {
+    background-color: #f0eaff;
+    color: #4a00e0;
+}

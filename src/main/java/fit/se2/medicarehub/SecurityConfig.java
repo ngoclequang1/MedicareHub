@@ -44,7 +44,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authenticationProvider(authenticationProvider(passwordEncoder()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/home", "/auth/**", "/terms","/css/**", "/js/**", "/images/**", "/layouts/**").permitAll()
+                        .requestMatchers("/", "/home", "/auth/**", "/terms", "/api/agent/chat", "/css/**", "/js/**", "/images/**", "/layouts/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/doctor/**").hasAuthority("ROLE_DOCTOR")
                         .requestMatchers("/patient/**").hasAuthority("ROLE_PATIENT")

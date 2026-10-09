@@ -19,6 +19,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             "ORDER BY a.appointmentDate ASC")
     List<Appointment> findAppointmentsByPatient(@Param("patientID") Long patientID);
 
+    List<Appointment> findByDoctorDoctorIDOrderByAppointmentDateAsc(Long doctorId);
+
     @Query("SELECT a FROM Appointment a " +
             "WHERE a.appointmentDate = :appointmentDate " +
             "AND a.patient.patientID = :patientID " +

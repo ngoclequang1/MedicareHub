@@ -89,3 +89,28 @@ src/main/resources/
 ## Lưu ý triển khai
 
 `spring.jpa.hibernate.ddl-auto=update` phù hợp cho phát triển cục bộ nhưng không nên dùng để quản lý schema production. Hãy chuyển sang migration có phiên bản trước khi phát hành.
+
+## AI Agent
+
+Agent nội bộ được phục vụ tại `POST /api/agent/chat` và thay thế webhook chatbot bên ngoài. Agent hiện hỗ trợ:
+
+- Phát hiện từ khóa cấp cứu trước khi gọi mô hình.
+- Tìm bác sĩ, đọc lịch hẹn và tóm tắt tối đa 5 hồ sơ gần nhất của chính bệnh nhân.
+- Chuẩn bị đặt lịch bằng cú pháp `dat lich bac si <id> ngay <yyyy-MM-dd>`.
+- Chỉ tạo lịch `PENDING` sau khi người dùng gửi lại lệnh `xac nhan <token>` trong vòng 10 phút.
+- Hỗ trợ bác sĩ xem danh sách lịch khám; không tự ghi nội dung AI vào bệnh án.
+- Audit intent, tool và mức an toàn cho người dùng đã đăng nhập.
+- RAG chỉ truy xuất các bản ghi `KnowledgeArticle` có `approved=true`; kho kiến thức trống sẽ không tạo nguồn y khoa giả.
+
+Mặc định agent chạy ở chế độ deterministic an toàn. Có thể bật một API tương thích OpenAI chỉ cho câu hỏi tổng quát:
+
+```powershell
+$env:AI_ENABLED = "true"
+$env:AI_BASE_URL = "https://api.openai.com/v1"
+$env:AI_API_KEY = "your-api-key"
+$env:AI_MODEL = "gpt-4.1-mini"
+```
+
+Dữ liệu lịch hẹn và bệnh án không được gửi tới AI provider trong phiên bản hiện tại. Mọi thao tác ghi đều đi qua confirmation token và service phân quyền của hệ thống.
+
+Trước khi dùng RAG ở production, quản trị viên cần nhập tài liệu từ nguồn y khoa chính thức, lưu `sourceUrl`, thực hiện quy trình duyệt và chỉ sau đó mới đặt `approved=true`. Khi thay đổi nội dung đã duyệt nên tạo phiên bản mới thay vì ghi đè để giữ audit trail.

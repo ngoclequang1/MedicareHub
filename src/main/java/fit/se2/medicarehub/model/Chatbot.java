@@ -14,11 +14,20 @@ public class Chatbot {
     private Long interactionID;
 
     @ManyToOne
-    @JoinColumn(name = "userID", nullable = false)
+    @JoinColumn(name = "userID")
     private User user;
 
+    @Lob
     private String message;
+
+    @Lob
     private String response;
+
+    private String intent;
+
+    private String toolName;
+
+    private String safetyLevel;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;

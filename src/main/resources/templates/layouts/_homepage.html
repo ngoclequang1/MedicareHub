@@ -5,6 +5,8 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
   <title>Medical Hub</title>
   <link rel="stylesheet" th:href="@{/css/homepage.css}" />
   <link rel="shortcuticon" th:href="@{/images/fav-icon.png}" />
@@ -74,11 +76,11 @@
 </div>
 <div id="chatbot-popup" class="chat-popup">
   <div class="chat-header">
-    <span>Chatbot</span>
+    <span>Trợ lý sức khỏe Medicare</span>
     <button id="close-chat">×</button>
   </div>
   <div class="chat-body" id="chat-body">
-    <p>Xin chào! Tôi có thể giúp gì cho bạn?</p>
+    <p>Xin chào! Tôi có thể hướng dẫn sử dụng Medicare Hub. Hãy đăng nhập để dùng công cụ cá nhân.</p>
   </div>
   <div class="chat-footer">
     <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." />

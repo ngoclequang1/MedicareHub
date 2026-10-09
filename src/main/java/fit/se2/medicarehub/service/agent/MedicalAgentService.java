@@ -185,7 +185,7 @@ public class MedicalAgentService {
             return;
         }
         Chatbot interaction = new Chatbot();
-        interaction.setMessage(message);
+        interaction.setMessage(message.replaceAll("(?i)(xac nhan\\s+)[0-9a-f-]{36}", "$1[REDACTED]"));
         interaction.setResponse(response.reply());
         interaction.setIntent(response.intent());
         interaction.setToolName(response.toolName());

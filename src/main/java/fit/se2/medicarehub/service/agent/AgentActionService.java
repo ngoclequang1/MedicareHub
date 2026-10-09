@@ -67,7 +67,7 @@ public class AgentActionService {
 
     @Transactional
     public Appointment confirmAppointment(User user, String token) {
-        AgentPendingAction action = actionRepository.findByTokenAndUser(token, user)
+        AgentPendingAction action = actionRepository.findByTokenAndUserForUpdate(token, user)
                 .orElseThrow(() -> new IllegalArgumentException("Yêu cầu xác nhận không hợp lệ."));
         if (action.isExecuted() || action.getExpiresAt().before(new Date())) {
             throw new IllegalArgumentException("Yêu cầu xác nhận đã hết hạn hoặc đã được sử dụng.");

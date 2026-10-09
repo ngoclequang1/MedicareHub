@@ -109,8 +109,11 @@ $env:AI_ENABLED = "true"
 $env:AI_BASE_URL = "https://api.openai.com/v1"
 $env:AI_API_KEY = "your-api-key"
 $env:AI_MODEL = "gpt-4.1-mini"
+$env:AI_RATE_LIMIT_PER_MINUTE = "20"
 ```
 
 Dữ liệu lịch hẹn và bệnh án không được gửi tới AI provider trong phiên bản hiện tại. Mọi thao tác ghi đều đi qua confirmation token và service phân quyền của hệ thống.
+
+API agent giới hạn mặc định 20 yêu cầu/phút cho mỗi tài khoản hoặc địa chỉ IP. Confirmation token được khóa tại database khi sử dụng và bị che khỏi audit log.
 
 Trước khi dùng RAG ở production, quản trị viên cần nhập tài liệu từ nguồn y khoa chính thức, lưu `sourceUrl`, thực hiện quy trình duyệt và chỉ sau đó mới đặt `approved=true`. Khi thay đổi nội dung đã duyệt nên tạo phiên bản mới thay vì ghi đè để giữ audit trail.

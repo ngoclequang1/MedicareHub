@@ -19,6 +19,7 @@ public class AgentPendingAction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long actionID;
 
+    @jakarta.persistence.Column(unique = true, nullable = false)
     private String token;
     private String actionType;
     private Long doctorId;

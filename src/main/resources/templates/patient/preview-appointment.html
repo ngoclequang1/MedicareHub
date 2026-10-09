@@ -95,7 +95,7 @@
                 <a>
                     <button onclick="closeDeleteModal()">Không, đừng xóa.</button>
                 </a>
-                <form action="/patient/preview-appointment" method="post">
+<form th:action="@{/patient/preview-appointment}" method="post">
                     <input type="hidden" name="appointmentId" th:value="${appointmentId}" />
                     <button type="submit">Có, hãy xóa đi.</button>
                 </form>

@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
@@ -43,8 +42,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .authenticationProvider(authenticationProvider(passwordEncoder()))
+        http.authenticationProvider(authenticationProvider(passwordEncoder()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/home", "/auth/**", "/terms","/css/**", "/js/**", "/images/**", "/layouts/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
@@ -52,7 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/patient/**").hasAuthority("ROLE_PATIENT")
                 .anyRequest().authenticated()
                 )
-                .formLogin(AbstractHttpConfigurer::disable);
+                .formLogin(form -> form.disable());
         return http.build();
     }
 

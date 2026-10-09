@@ -2,16 +2,14 @@ package fit.se2.medicarehub.controller;
 
 import fit.se2.medicarehub.model.*;
 import fit.se2.medicarehub.repository.AppointmentRepository;
-import fit.se2.medicarehub.repository.ScheduleRepository;
 import fit.se2.medicarehub.repository.SpecialtyRepository;
 import fit.se2.medicarehub.service.AdminService;
-import fit.se2.medicarehub.service.EmailService;
+import fit.se2.medicarehub.service.AppointmentBookingService;
 import fit.se2.medicarehub.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,10 +36,7 @@ public class PatientController {
     private SpecialtyRepository specialtyRepository;
 
     @Autowired
-    private ScheduleRepository scheduleRepository;
-
-    @Autowired
-    private EmailService emailService;
+    private AppointmentBookingService appointmentBookingService;
 
     @GetMapping("/")
     public String route() {
@@ -134,7 +129,7 @@ public class PatientController {
         return "redirect:/patient/report";
     }
 
-    @GetMapping("/delete-report")
+    @PostMapping("/delete-report")
     public String deleteRecord(@RequestParam(value = "patientId", required = false) Long patientId) {
         if (patientId != null) {
             patientService.hideCurrentPatientById(patientId);
@@ -225,20 +220,23 @@ public class PatientController {
             return "redirect:/patient/appointment-list";
         }
 
-        AppointmentReminder reminder;
-        if (appointment.isReminderStatus()) {
-            // Đã có nhắc hẹn => cập nhật reminder hiện có
-            reminder = patientService.findAppointmentReminderByAppointmentId(appointmentId)
-                    .orElse(new AppointmentReminder()); // fallback nếu dữ liệu lỗi
-        } else {
-            reminder = new AppointmentReminder();
+        AppointmentReminder reminder = patientService.findAppointmentReminderByAppointmentId(appointmentId)
+                .orElseGet(() -> {
+                    AppointmentReminder newReminder = new AppointmentReminder();
+                    newReminder.setAppointment(appointment);
+                    newReminder.setPatient(patient);
+                    return newReminder;
+                });
+        if (reminder.getReminderID() == null) {
             reminder.setAppointment(appointment);
             reminder.setPatient(patient);
-            reminder.setReminderStatus(true);
-            appointment.setReminderStatus(true);
-            appointment.setReminderStatus(true);
-            appointmentRepository.save(appointment);
         }
+        reminder.setReminderStatus(true);
+        reminder.setAttemptCount(0);
+        reminder.setLastAttemptAt(null);
+        reminder.setLastError(null);
+        appointment.setReminderStatus(true);
+        appointmentRepository.save(appointment);
         reminder.setMessage(message);
         reminder.setReminderTime(Timestamp.valueOf(reminderTime));
 
@@ -246,27 +244,6 @@ public class PatientController {
 
         model.addAttribute("notification", "Lịch nhắc cuộc hẹn đã được lưu.");
         return "redirect:/patient/appointment-list/detail?appointmentId=" + appointmentId;
-    }
-
-    @Scheduled(fixedRate = 6000)
-    public void processAppointmentReminders() {
-        Date now = new Date();
-        List<AppointmentReminder> dueReminders = patientService.dueAppointmentReminders(now);
-
-        for (AppointmentReminder reminder : dueReminders) {
-            String email = reminder.getPatient().getUser().getEmail();
-            String subject = "Nhắc nhở cuộc hẹn: " + reminder.getAppointment().getAppointmentDate();
-            String message = "Bạn có một cuộc hẹn vào " + reminder.getAppointment().getAppointmentDate() +
-                    ". Nội dung nhắc nhở: " + reminder.getMessage();
-
-            emailService.sendEmail(email, subject, message);
-            reminder.setReminderStatus(false);
-            patientService.updateAppointmentReminder(reminder);
-
-            Appointment appointment = reminder.getAppointment();
-            appointment.setReminderStatus(false);
-            appointmentRepository.save(appointment);
-        }
     }
 
     @GetMapping("/booking")
@@ -394,9 +371,15 @@ public class PatientController {
 
     @PostMapping("/preview-appointment")
     public String deletePreviewAppointment(@RequestParam("appointmentId") Long appointmentId, Model
-                                           model) {appointmentRepository.deleteById(appointmentId);
-
+                                           model) {
         Patient patient = patientService.getCurrentPatient();
+        if (patient == null) {
+            return "redirect:/patient/report";
+        }
+        appointmentRepository.findById(appointmentId)
+                .filter(appointment -> appointment.getPatient().getPatientID().equals(patient.getPatientID()))
+                .filter(appointment -> appointment.getStatus() == AppointmentStatus.PENDING)
+                .ifPresent(appointmentRepository::delete);
         model.addAttribute("patient", patient);
 
         return "patient/preview-appointment";
@@ -411,48 +394,22 @@ public class PatientController {
             return "redirect:/patient/report";
         }
 
-        Optional<Appointment> optional = appointmentRepository.findById(appointmentId);
-        if (optional.isEmpty()) {
-            model.addAttribute("error", "Không tìm thấy lịch hẹn.");
-            return "patient/booking";
-        }
+        AppointmentBookingService.ConfirmationResult result =
+                appointmentBookingService.confirm(appointmentId, patient.getPatientID());
 
-        Appointment appointment = optional.get();
+        return switch (result) {
+            case CONFIRMED -> "redirect:/patient/appointment-list";
+            case NOT_FOUND -> bookingError(model, "Không tìm thấy lịch hẹn.");
+            case FORBIDDEN -> bookingError(model, "Bạn không có quyền xác nhận lịch hẹn này.");
+            case NOT_PENDING -> bookingError(model, "Lịch hẹn này không còn ở trạng thái chờ.");
+            case OUTSIDE_SCHEDULE -> bookingError(model, "Không tìm thấy lịch làm việc phù hợp cho bác sĩ.");
+            case FULL -> bookingError(model, "Lịch hẹn của bác sĩ đã đầy trong khoảng thời gian này.");
+        };
+    }
 
-        // Kiểm tra xem appointment này có còn PENDING không
-        if (appointment.getStatus() != AppointmentStatus.PENDING) {
-            model.addAttribute("error", "Lịch hẹn này đã được xác nhận hoặc không còn ở trạng thái chờ.");
-            return "patient/booking";
-        }
-
-        // Kiểm tra xem bác sĩ đã đủ lượt trong cùng thời điểm chưa
-        List<Appointment> doctorAppointments = appointmentRepository.findAppointmentsByDoctorAndDate(
-                appointment.getDoctor().getDoctorID(),
-                appointment.getAppointmentDate()
-        );
-        List<Schedule> schedules = scheduleRepository.findSchedulesByDoctorDoctorID(appointment.getDoctor().getDoctorID());
-        Schedule validSchedule = schedules.stream()
-                .filter(schedule -> !appointment.getAppointmentDate().before(schedule.getStartTime())
-                        && !appointment.getAppointmentDate().after(schedule.getEndTime()))
-                .findFirst().orElse(null);
-
-        if (validSchedule != null) {
-            int seatCount = validSchedule.getSeatCount();
-            if (doctorAppointments.size() >= seatCount) {
-                model.addAttribute("error", "Lịch hẹn của bác sĩ đã đầy trong khoảng thời gian này.");
-                return "patient/booking";
-            }
-        } else {
-            model.addAttribute("error", "Không tìm thấy lịch làm việc phù hợp cho bác sĩ.");
-            return "patient/booking";
-        }
-
-        appointment.setStatus(AppointmentStatus.CONFIRMED);
-        appointment.setCreatedAt(new Date());
-        appointment.setQueueNumber(doctorAppointments.size());
-        appointmentRepository.save(appointment);
-
-        return "redirect:/patient/appointment-list";
+    private String bookingError(Model model, String message) {
+        model.addAttribute("error", message);
+        return "patient/booking";
     }
 
     @GetMapping("/record")
@@ -495,6 +452,12 @@ public class PatientController {
     public String reminder(@PathVariable long id, Model model) {
         MedicalRecord medicalRecord = adminService.getMedicalRecordById(id);
 
+        Patient patient = patientService.getCurrentPatient();
+        if (medicalRecord == null || patient == null ||
+                !medicalRecord.getPatient().getPatientID().equals(patient.getPatientID())) {
+            return "redirect:/patient/reminder";
+        }
+
         model.addAttribute("medicalRecord", medicalRecord);
         return "patient/reminder-detail";
     }
@@ -508,29 +471,32 @@ public class PatientController {
         MedicalRecord medicalRecord = adminService.getMedicalRecordById(id);
         Patient patient = patientService.getCurrentPatient();
 
+        if (medicalRecord == null || patient == null ||
+                !medicalRecord.getPatient().getPatientID().equals(patient.getPatientID())) {
+            return "redirect:/patient/reminder";
+        }
+
         Prescription targetPrescription = medicalRecord.getPrescriptions()
                 .stream()
                 .filter(p -> p.getPrescriptionID().equals(prescriptionId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Prescription not found"));
 
-        MedicationReminder reminder;
-
-        if (targetPrescription.isReminder()) {
-            reminder = patientService.findMedicationReminderByPrescriptionId(prescriptionId)
-                    .orElse(new MedicationReminder());
-        } else {
-            reminder = new MedicationReminder();
+        MedicationReminder reminder = patientService.findMedicationReminderByPrescriptionId(prescriptionId)
+                .orElseGet(MedicationReminder::new);
+        if (reminder.getReminderID() == null) {
             reminder.setPatient(patient);
             reminder.setPrescriptionId(targetPrescription.getPrescriptionID());
             reminder.setMedicationName(targetPrescription.getMedicineName());
             reminder.setDosage(targetPrescription.getInstruction());
-            reminder.setReminderStatus(true);
-
-            targetPrescription.setReminder(true);
-            patientService.updatePrescription(targetPrescription);
         }
 
+        reminder.setReminderStatus(true);
+        reminder.setAttemptCount(0);
+        reminder.setLastAttemptAt(null);
+        reminder.setLastError(null);
+        targetPrescription.setReminder(true);
+        patientService.updatePrescription(targetPrescription);
         reminder.setReminderTime(Timestamp.valueOf(reminderTime));
         patientService.updateMedicationReminder(reminder);
 
@@ -538,30 +504,5 @@ public class PatientController {
         return "redirect:/patient/reminder/" + id;
     }
 
-
-    @Scheduled(fixedRate = 60000)
-    public void processMedicationReminders() {
-        Date now = new Date();
-        List<MedicationReminder> dueReminders = patientService.dueReminders(now);
-
-        for (MedicationReminder reminder : dueReminders) {
-            if (reminder.isReminderStatus()) {
-                String email = reminder.getPatient().getUser().getEmail();
-                String subject = "Nhắc nhở uống thuốc: " + reminder.getMedicationName();
-                String message = "Bạn cần sử dụng thuốc " + reminder.getMedicationName()
-                        + ". Hướng dẫn: " + reminder.getDosage();
-
-                emailService.sendEmail(email, subject, message);
-                reminder.setReminderStatus(false);
-                patientService.updateMedicationReminder(reminder);
-
-                Optional<Prescription> p = patientService.findPrescriptionById(reminder.getPrescriptionId());
-                if (p.isPresent()) {
-                    p.get().setReminder(false);
-                    patientService.updatePrescription(p.get());
-                }
-            }
-        }
-    }
 
 }

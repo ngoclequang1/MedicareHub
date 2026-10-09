@@ -7,8 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -89,20 +87,12 @@ public class PatientService {
         return prescriptionRepository.findById(prescriptionId);
     }
 
-    public List<MedicationReminder> dueReminders (Date now) {
-        return medicationReminderRepository.findByReminderTimeBefore(now);
-    }
-
     public MedicationReminder updateMedicationReminder(MedicationReminder reminder) {
         return medicationReminderRepository.save(reminder);
     }
 
     public AppointmentReminder updateAppointmentReminder(AppointmentReminder reminder) {
         return appointmentReminderRepository.save(reminder);
-    }
-
-    public List<AppointmentReminder> dueAppointmentReminders (Date now) {
-        return appointmentReminderRepository.findByReminderTimeLessThanEqualAndReminderStatusTrue(now);
     }
 
     public Optional<AppointmentReminder> findAppointmentReminderByAppointmentId(Long appointmentId) {

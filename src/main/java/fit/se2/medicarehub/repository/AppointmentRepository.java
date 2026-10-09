@@ -1,6 +1,7 @@
 package fit.se2.medicarehub.repository;
 
 import fit.se2.medicarehub.model.Appointment;
+import fit.se2.medicarehub.model.AppointmentStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,17 +21,14 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @Query("SELECT a FROM Appointment a " +
             "WHERE a.appointmentDate = :appointmentDate " +
-            "AND a.doctor.doctorID = :doctorID " +
-            "ORDER BY a.appointmentDate ASC")
-    List<Appointment> findAppointmentsByDoctorAndDate(@Param("doctorID") Long doctorID, @Param("appointmentDate") Date appointmentDate);
-
-    @Query("SELECT a FROM Appointment a " +
-            "WHERE a.appointmentDate = :appointmentDate " +
             "AND a.patient.patientID = :patientID " +
             "AND a.doctor.doctorID = :doctorID")
     List<Appointment> findAppointmentByPatientDoctorAndDate(@Param("patientID") Long patientID,
                                                             @Param("doctorID") Long doctorID,
                                                             @Param("appointmentDate") Date appointmentDate);
+
+    long countByDoctorDoctorIDAndAppointmentDateAndStatusIn(Long doctorId, Date appointmentDate,
+                                                             List<AppointmentStatus> statuses);
 
     //Apointmentstats
     @Query("SELECT COUNT(a) FROM Appointment a " +

@@ -43,9 +43,9 @@
                 <a th:href="@{/doctor/schedule}">
                     <i class="fa-solid fa-circle-info"></i> Lịch trực
                 </a>
-                <a th:href="@{/auth/logout}" class="logout">
+                <form th:action="@{/auth/logout}" method="post" style="display: contents;"><button type="submit" class="logout" style="border: 0; background: none; font: inherit; cursor: pointer;">
                     <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
-                </a>
+                </button></form>
             </div>
         </div>
     </nav>

@@ -58,7 +58,10 @@
                 <p>Bạn muốn xóa hồ sơ này chứ?</p>
                 <div class="popup-actions">
                     <button id="cancel-delete">Không, đừng xóa.</button>
-                    <button id="confirm-delete">Có, hãy xóa đi.</button>
+                    <form th:action="@{/patient/delete-report}" method="post">
+                        <input type="hidden" name="patientId" th:value="${patient.patientID}" />
+                        <button type="submit" id="confirm-delete">Có, hãy xóa đi.</button>
+                    </form>
                 </div>
             </div>
         </div>

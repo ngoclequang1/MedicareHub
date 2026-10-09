@@ -24,10 +24,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
+import java.security.SecureRandom;
+import java.time.Duration;
 
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
+
+    private static final Duration RESET_TOKEN_TTL = Duration.ofMinutes(30);
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -97,8 +102,9 @@ public class AuthController {
 
             Optional<User> currentUser = userRepository.findByEmail(email);
             if (currentUser.isPresent() && "123".equals(password)) {
-                String token = UUID.randomUUID().toString();
+                String token = generateSecureToken();
                 currentUser.get().setUUID(token);
+                currentUser.get().setResetTokenExpiresAt(Date.from(new Date().toInstant().plus(RESET_TOKEN_TTL)));
                 userRepository.save(currentUser.get());
 
                 return "redirect:/auth/reset-password?token=" + token;
@@ -121,7 +127,8 @@ public class AuthController {
     public String resetPassword(@RequestParam("token") String token,
                                 Model model) {
         Optional<User> userOptional = userRepository.findByUUID(token);
-        if (userOptional.isEmpty()) {
+        if (userOptional.isEmpty() || isResetTokenExpired(userOptional.get())) {
+            userOptional.ifPresent(this::clearResetToken);
             model.addAttribute("error", "Invalid or expired reset token.");
             return "redirect:/home";
         }
@@ -135,7 +142,8 @@ public class AuthController {
                                  @RequestParam("token") String token,
                                  Model model) {
         Optional<User> user = userRepository.findByUUID(token);
-        if (user.isEmpty()) {
+        if (user.isEmpty() || isResetTokenExpired(user.get())) {
+            user.ifPresent(this::clearResetToken);
             model.addAttribute("error", "Token invalid");
             return "reset-password";
         }
@@ -149,6 +157,7 @@ public class AuthController {
         }
         user.get().setPassword(passwordEncoder.encode(password));
         user.get().setUUID(null);
+        user.get().setResetTokenExpiresAt(null);
 
         userRepository.save(user.get());
 
@@ -161,14 +170,15 @@ public class AuthController {
                                 RedirectAttributes redirectAttributes) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Không tim thấy tài khoản! Vui lòng nhập đúng email");
+            redirectAttributes.addFlashAttribute("successMessage", "Nếu email tồn tại, liên kết đặt lại mật khẩu sẽ được gửi.");
             return "redirect:/home?showForgot=true";
         }
-        String token = UUID.randomUUID().toString();
+        String token = generateSecureToken();
 
         User user = userOptional.get();
 
         user.setUUID(token);
+        user.setResetTokenExpiresAt(Date.from(new Date().toInstant().plus(RESET_TOKEN_TTL)));
         userRepository.save(user);
 
         String resetPasswordUrl = getAppUrl(request) + "/auth/reset-password?token=" + token;
@@ -179,11 +189,27 @@ public class AuthController {
         return "redirect:/home?showForgot=true";
     }
 
+    private String generateSecureToken() {
+        byte[] bytes = new byte[32];
+        SECURE_RANDOM.nextBytes(bytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+    }
+
+    private boolean isResetTokenExpired(User user) {
+        return user.getResetTokenExpiresAt() == null || user.getResetTokenExpiresAt().before(new Date());
+    }
+
+    private void clearResetToken(User user) {
+        user.setUUID(null);
+        user.setResetTokenExpiresAt(null);
+        userRepository.save(user);
+    }
+
     private String getAppUrl(HttpServletRequest request) {
         return request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath());
     }
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public String logout(HttpServletRequest request) {
         // Hủy session hiện tại
         request.getSession().invalidate();

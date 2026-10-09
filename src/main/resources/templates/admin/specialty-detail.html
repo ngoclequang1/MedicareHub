@@ -44,7 +44,7 @@
             <div class="modal-content">
                 <span class="close" onclick="hideForm()">&times;</span>
                 <h2 class="form-title">Chỉnh sửa</h2>
-                <form action="/admin/specialty/update" method="post" th:object="${specialtyDTO}">
+<form th:action="@{/admin/specialty/update}" method="post" th:object="${specialtyDTO}">
                     <input type="hidden" th:if="${specialty.specialtyID != null}" name="id" th:value="${specialty.specialtyID}" />
                     <div class="row">
                         <div class="half-width">
@@ -167,7 +167,7 @@
             <div class="modal-content">
                 <span class="close" onclick="hideForm()">&times;</span>
                 <h2 class="form-title">Thêm nhân viên</h2>
-                <form action="/admin/doctors/save" method="post" enctype="multipart/form-data" class="addForm">
+<form th:action="@{/admin/doctors/save}" method="post" enctype="multipart/form-data" class="addForm">
                     <p class="required-note">(*) Thông tin bắt buộc</p>
                     <div class="error-message" th:if="${#fields.hasErrors('doctorDTO.doctor.user.fullName')}" th:errors="${doctorDTO.doctor.user.fullName}"></div>
                     <input type="text" class="ideal-width" th:field="${doctorDTO.doctor.user.fullName}" placeholder="Họ tên *" required>

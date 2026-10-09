@@ -36,4 +36,7 @@ public class User {
 
     private String UUID;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date resetTokenExpiresAt;
+
 }

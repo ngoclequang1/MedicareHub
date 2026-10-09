@@ -218,7 +218,7 @@ public class AdminController {
 
 
 
-    @GetMapping("/doctors/delete/{id}")
+    @PostMapping("/doctors/delete/{id}")
     public String deleteDoctor(@PathVariable("id") Long id) {
         adminService.deleteDoctor(id);
         return "redirect:/admin/doctors";

@@ -18,7 +18,7 @@
       <!-- Login Form -->
       <div class="form-container" id="login-form" th:fragment="login">
         <h2>Đăng nhập</h2>
-        <form id="login-form-submit" action="/auth/login" method="post">
+        <form id="login-form-submit" th:action="@{/auth/login}" method="post">
           <input type="email" id="email" name="email" placeholder="Nhập email của bạn" required />
           <input type="password" id="password" name="password" placeholder="Mật khẩu" required />
           <button type="submit" class="btn-primary">Đăng nhập</button>
@@ -29,7 +29,7 @@
       <!-- Register Form -->
       <div class="form-container" id="register-form" style="display: none" th:fragment="register">
         <h2>Đăng ký Tài khoản</h2>
-        <form id="register-form-submit" action="/auth/register" method="post" th:object="${userDTO}">
+        <form id="register-form-submit" th:action="@{/auth/register}" method="post" th:object="${userDTO}">
           <div class="error-message" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
           <input type="text" th:field="*{firstName}" placeholder="Tên của bạn" required/>
 
@@ -64,7 +64,7 @@
         <p th:if="${successMessage == null}">Chúng tôi sẽ gửi bạn hướng dẫn bằng email</p>
         <div class="errors" th:if="${error}" th:text="${error}"></div>
         <div class="success-message" th:if="${successMessage}" th:text="${successMessage}"></div>
-        <form id="forgot-form-submit" action="auth/forgot-password" method="post">
+        <form id="forgot-form-submit" th:action="@{/auth/forgot-password}" method="post">
           <input type="email" name="email" placeholder="Nhập email của bạn" required />
           <button type="submit" class="btn-primary">Gửi yêu cầu</button>
         </form>

@@ -27,4 +27,12 @@ public class AppointmentReminder {
     private Date reminderTime;
 
     private boolean reminderStatus = false;
+
+    private int attemptCount = 0;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastAttemptAt;
+
+    @Column(length = 500)
+    private String lastError;
 }

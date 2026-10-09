@@ -12,9 +12,4 @@ document.addEventListener("DOMContentLoaded", () =>{
         popup.style.display = 'none';
     });
 
-    confirmBtn.addEventListener('click', () => {
-        const patientId = deleteBtn.getAttribute("data-id");
-        window.location.href = "/patient/delete-report?patientId=" + patientId;
-    });
-
 })

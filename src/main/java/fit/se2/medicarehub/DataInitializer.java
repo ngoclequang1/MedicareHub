@@ -9,21 +9,30 @@ import fit.se2.medicarehub.repository.RoleRepository;
 import fit.se2.medicarehub.repository.SpecialtyRepository;
 import fit.se2.medicarehub.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.sql.Timestamp;
 
 @Configuration
 public class DataInitializer {
+
+    @Value("${app.bootstrap-admin.email:}")
+    private String bootstrapAdminEmail;
+
+    @Value("${app.bootstrap-admin.password:}")
+    private String bootstrapAdminPassword;
 
     @Autowired
     private UserRepository userRepository;
@@ -84,7 +93,11 @@ public class DataInitializer {
     @Bean
     public CommandLineRunner initializeAdminAccount() {
         return args -> {
-            String adminEmail = "admin@example.com";
+            if (bootstrapAdminEmail.isBlank() || bootstrapAdminPassword.isBlank()) {
+                return;
+            }
+
+            String adminEmail = bootstrapAdminEmail.trim().toLowerCase(Locale.ROOT);
 
             if (userRepository.findByEmail(adminEmail).isEmpty()) {
                 Optional<Role> adminRoleOpt = roleRepository.findByRoleName("ROLE_ADMIN");
@@ -100,7 +113,7 @@ public class DataInitializer {
                 User admin = new User();
                 admin.setUsername(adminEmail);
                 admin.setEmail(adminEmail);
-                admin.setPassword(passwordEncoder.encode("admin123"));
+                admin.setPassword(passwordEncoder.encode(bootstrapAdminPassword));
                 admin.setEnabled(true);
                 admin.setRoleID(adminRole);
                 admin.setCreatedAt(new Date());
@@ -118,6 +131,7 @@ public class DataInitializer {
     }
 
     @Bean
+    @Profile("demo")
     public CommandLineRunner initializeDemoData() {
         return args -> {
             initializeRoles().run(args);

@@ -30,14 +30,6 @@ document.addEventListener("DOMContentLoaded",  () => {
         });
     }
 
-    // Xử lý nút "Có, hãy xóa đi"
-    if (confirmDeleteBtn) {
-        confirmDeleteBtn.addEventListener("click", () => {
-            const patientId = deleteBtn.getAttribute("data-id");
-            window.location.href = "/patient/delete-report?patientId=" + patientId;
-        });
-    }
-
     // Mở popup chi tiết
     if (detailBtn) {
         detailBtn.addEventListener("click", () => {

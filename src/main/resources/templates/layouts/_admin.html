@@ -63,9 +63,9 @@
             </li>
         </ul>
     </nav>
-    <a th:href="@{/auth/logout}" class="logout">
+    <form th:action="@{/auth/logout}" method="post" style="display: contents;"><button type="submit" class="logout" style="border: 0; background: none; font: inherit; cursor: pointer;">
         <span class="icon logout-icon"><i class="fas fa-sign-out-alt"></i></span> Đăng xuất
-    </a>
+    </button></form>
 </aside>
 
 

@@ -41,7 +41,7 @@
       <div class="modal-content">
         <span class="close" onclick="hideForm()">&times;</span>
         <h2 class="form-title">Thêm nhân viên</h2>
-        <form action="/admin/doctors/save" method="post" enctype="multipart/form-data" id="addForm" th:object="${doctorDTO}" onsubmit="return validateDob()">
+<form th:action="@{/admin/doctors/save}" method="post" enctype="multipart/form-data" id="addForm" th:object="${doctorDTO}" onsubmit="return validateDob()">
           <p class="required-note"> (*) Thông tin bắt buộc</p>
           <div class="error-message" th:if="${#fields.hasErrors('doctor.user.fullName')}" th:errors="*{doctor.user.fullName}"></div>
           <input type="text" class="ideal-width" th:field="*{doctor.user.fullName}" placeholder="Họ tên *" required>
